@@ -1,0 +1,16 @@
+.login-page {
+  background:
+    linear-gradient(rgba(12, 74, 110, 0.76), rgba(15, 23, 42, 0.82)),
+    url("https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1800&q=80") center/cover;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.8rem;
+  color: #ffffff;
+  background: #0d6efd;
+  font-weight: 900;
+}

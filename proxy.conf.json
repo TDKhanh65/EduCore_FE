@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "https://educore-uuoe.onrender.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/WeatherForecast": {
+    "target": "https://educore-uuoe.onrender.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

@@ -2,7 +2,11 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "cache": {
+      "enabled": false
+    },
+    "analytics": "1e0fd9dc-4d96-4928-a141-c569af1c4ee7"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -67,7 +71,8 @@
               "buildTarget": "EduCore_FE:build:production"
             },
             "development": {
-              "buildTarget": "EduCore_FE:build:development"
+              "buildTarget": "EduCore_FE:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

@@ -1,0 +1,19 @@
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  color: #084298;
+  background: #ffffff;
+  font-weight: 900;
+}
+
+.nav-link {
+  color: #24466f;
+  font-weight: 700;
+}
+
+.nav-link.active {
+  box-shadow: 0 0.6rem 1.25rem rgba(13, 110, 253, 0.18);
+}

@@ -1,0 +1,39 @@
+<main class="login-page min-vh-100 d-flex align-items-center py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-5">
+        <section class="card border-0 shadow-lg">
+          <div class="card-body p-4 p-md-5">
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <div class="brand-mark">EC</div>
+              <div>
+                <h1 class="h3 mb-1">EduCore</h1>
+                <p class="text-secondary mb-0">Dang nhap quan ly diem sinh vien</p>
+              </div>
+            </div>
+
+            @if (errorMessage()) {
+              <div class="alert alert-danger">{{ errorMessage() }}</div>
+            }
+
+            <form (ngSubmit)="login()" class="d-grid gap-3">
+              <div>
+                <label for="username" class="form-label fw-semibold">Tai khoan</label>
+                <input id="username" name="username" class="form-control form-control-lg" [(ngModel)]="loginForm.username" autocomplete="username" required />
+              </div>
+
+              <div>
+                <label for="password" class="form-label fw-semibold">Mat khau</label>
+                <input id="password" name="password" type="password" class="form-control form-control-lg" [(ngModel)]="loginForm.password" autocomplete="current-password" required />
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg mt-2" [disabled]="isLoading()">
+                {{ isLoading() ? 'Dang dang nhap...' : 'Dang nhap' }}
+              </button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>

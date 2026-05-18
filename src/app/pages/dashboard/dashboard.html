@@ -1,0 +1,96 @@
+<main class="min-vh-100 bg-body-tertiary">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-3 col-xl-2 bg-primary-subtle border-end p-3 p-lg-4">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="brand-mark">EC</div>
+          <div>
+            <div class="fw-bold">EduCore</div>
+            <div class="small text-secondary">Quan ly diem sinh vien</div>
+          </div>
+        </div>
+
+        <nav class="nav nav-pills flex-lg-column gap-2">
+          @for (item of menuItems; track item.id) {
+            <button type="button" class="nav-link text-start" [class.active]="activeMenuId() === item.id" (click)="selectMenu(item.id)">
+              {{ item.label }}
+            </button>
+          }
+        </nav>
+      </aside>
+
+      <section class="col p-3 p-lg-4">
+        <header class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+          <div>
+            <div class="text-primary text-uppercase small fw-bold">He thong dao tao</div>
+            <h1 class="h3 mb-1">{{ activeMenu().label }}</h1>
+            <p class="text-secondary mb-0">{{ activeMenu().description }}</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary" (click)="refresh()" [disabled]="isLoading()">Lam moi</button>
+            <button type="button" class="btn btn-primary" (click)="logout()">Dang xuat</button>
+          </div>
+        </header>
+
+        @if (message()) {
+          <div class="alert alert-warning">{{ message() }}</div>
+        }
+
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="text-secondary small">Ban ghi dang xem</div>
+                <div class="fs-3 fw-bold">{{ rows().length }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="text-secondary small">Trang thai</div>
+                <div class="fs-3 fw-bold">{{ isLoading() ? 'Dang tai' : 'San sang' }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="text-secondary small">Phan he</div>
+                <div class="fs-3 fw-bold">{{ menuItems.length }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="card border-0 shadow-sm">
+          <div class="card-header bg-white d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+            <div>
+              <div class="text-primary text-uppercase small fw-bold">{{ activeMenu().label }}</div>
+              <h2 class="h5 mb-0">Danh sach du lieu</h2>
+            </div>
+            <button type="button" class="btn btn-success">Them moi</button>
+          </div>
+          <div class="card-body">
+            @if (rows().length || isLoading()) {
+              <app-data-table [columns]="displayColumns()" [rows]="rows()" [loading]="isLoading()" />
+            } @else if (summary(); as info) {
+              <div class="row g-3">
+                @for (entry of info | keyvalue; track entry.key) {
+                  <div class="col-12 col-md-4">
+                    <div class="border rounded-3 p-3">
+                      <div class="text-secondary small">{{ entry.key }}</div>
+                      <div class="fs-5 fw-bold">{{ entry.value }}</div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <app-data-table [columns]="displayColumns()" [rows]="[]" [loading]="isLoading()" />
+            }
+          </div>
+        </section>
+      </section>
+    </div>
+  </div>
+</main>
