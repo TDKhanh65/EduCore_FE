@@ -1,0 +1,82 @@
+.data-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #d7e4f2;
+  border-radius: 0.85rem;
+  background: #ffffff;
+}
+
+.data-table {
+  min-width: 720px;
+  --bs-table-bg: #ffffff;
+  --bs-table-color: #1e293b;
+  --bs-table-border-color: #dce8f5;
+  --bs-table-hover-bg: #eff6ff;
+  --bs-table-hover-color: #0f172a;
+}
+
+.data-table > thead > tr > th {
+  padding: 0.9rem 1rem;
+  color: #2f5f9e;
+  background: #edf5ff;
+  border-bottom: 1px solid #d7e4f2;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.data-table > tbody > tr > td {
+  padding: 0.9rem 1rem;
+  color: #182638;
+  background: #ffffff;
+  border-color: #e0ebf6;
+  font-size: 0.94rem;
+  white-space: nowrap;
+}
+
+.data-table > tbody > tr:hover > td {
+  background: #eff6ff;
+}
+
+.table-state {
+  padding: 3rem 1rem !important;
+  color: #64748b !important;
+  text-align: center;
+}
+
+.edit-button {
+  min-width: 4.1rem;
+  color: #1267c8;
+  border: 1px solid #9cc5ff;
+  border-radius: 0.65rem;
+  background: #eef6ff;
+  font-weight: 750;
+}
+
+.edit-button:hover {
+  color: #ffffff;
+  border-color: #1677e8;
+  background: #1677e8;
+}
+
+@media (max-width: 700px) {
+  .data-table-wrap {
+    margin: 0 -0.35rem;
+    border-radius: 0.7rem;
+  }
+
+  .data-table {
+    min-width: 620px;
+  }
+
+  .data-table > thead > tr > th,
+  .data-table > tbody > tr > td {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.82rem;
+  }
+
+  .edit-button {
+    min-width: 3.4rem;
+  }
+}

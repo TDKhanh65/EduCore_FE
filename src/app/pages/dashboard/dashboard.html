@@ -1,0 +1,120 @@
+<main class="dashboard-shell">
+  <aside class="dashboard-sidebar">
+    <div class="brand-panel">
+      <div class="brand-mark">EC</div>
+      <div>
+        <div class="brand-name">EduCore</div>
+      </div>
+    </div>
+
+    <nav class="nav nav-pills flex-lg-column gap-2">
+      @for (item of menuItems; track item.id) {
+        <button type="button" class="nav-link" [class.active]="activeMenuId() === item.id" (click)="selectMenu(item.id)">
+          <span class="nav-icon">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </button>
+      }
+    </nav>
+  </aside>
+
+  <section class="dashboard-main">
+    <div class="topbar">
+      <div class="academy-pill"><span></span> educore-academy</div>
+      <div class="topbar-actions">
+        <button type="button" class="campus-button">Bhoothnath Campus</button>
+        <div class="user-chip">
+          <span>S</span>
+          <div>
+            <strong>Quản trị viên</strong>
+            <small>Admin</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <header class="page-header">
+      <div>
+        @if (isDashboard()) {
+          <h1>Xin chào, Quản trị viên</h1>
+          <p>Tổng quan tình hình hoạt động của hệ thống đào tạo hôm nay.</p>
+        } @else {
+          <div class="eyebrow">EduCore</div>
+          <h1>{{ activeMenu().label }}</h1>
+          <p>{{ activeMenu().description }}</p>
+        }
+      </div>
+      <div class="header-actions">
+        <button type="button" class="action-button ghost" (click)="refresh()" [disabled]="isLoading()">Làm mới</button>
+        <button type="button" class="action-button primary" (click)="logout()">Đăng xuất</button>
+      </div>
+    </header>
+
+    @if (message()) {
+      <div class="alert-panel">{{ message() }}</div>
+    }
+
+    @if (isDashboard()) {
+      <div class="overview-grid">
+        @for (metric of summaryMetrics(); track metric.key) {
+          <article class="overview-card" [class]="'overview-card tone-' + metric.tone">
+            <div class="overview-icon">{{ metric.key === 'StudentCount' ? 'SV' : metric.key === 'ClassCount' ? 'LH' : metric.key === 'SubjectCount' ? 'MH' : '!' }}</div>
+            <div>
+              <small>+ {{ metric.helper }}</small>
+              <strong>{{ isLoading() ? '...' : metric.value }}</strong>
+              <span>{{ metric.label }}</span>
+            </div>
+          </article>
+        }
+      </div>
+
+      <div class="dashboard-grid">
+        <section>
+          <div class="section-title">Thao tác nhanh</div>
+          <div class="quick-actions">
+            <button type="button" class="quick-action" (click)="selectMenu('students')">
+              <span>SV</span>
+              <div><strong>Thêm sinh viên</strong><small>Tạo hồ sơ sinh viên mới</small></div>
+              <b>&gt;</b>
+            </button>
+            <button type="button" class="quick-action" (click)="selectMenu('scores')">
+              <span>Đ</span>
+              <div><strong>Cập nhật điểm</strong><small>Ghi nhận điểm và cảnh báo học tập</small></div>
+              <b>&gt;</b>
+            </button>
+            <button type="button" class="quick-action" (click)="selectMenu('classes')">
+              <span>LH</span>
+              <div><strong>Quản lý lớp học</strong><small>Tổ chức lớp và dữ liệu giảng dạy</small></div>
+              <b>&gt;</b>
+            </button>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Tổng quan học vụ</div>
+          <div class="overview-panel">
+            <div class="overview-line"><span>Sinh viên</span><strong>{{ summary()?.['StudentCount'] ?? 0 }}</strong></div>
+            <div class="overview-line"><span>Lớp học</span><strong>{{ summary()?.['ClassCount'] ?? 0 }}</strong></div>
+            <div class="overview-line"><span>Môn học</span><strong>{{ summary()?.['SubjectCount'] ?? 0 }}</strong></div>
+            <div class="overview-line warning"><span>Cảnh báo</span><strong>{{ summary()?.['WarningCount'] ?? 0 }}</strong></div>
+          </div>
+        </section>
+      </div>
+    } @else if (activeMenuId() === 'students') {
+      <app-students-page [rows]="rows()" [loading]="isLoading()" />
+    } @else {
+      <section class="content-panel">
+        <div class="content-panel-header">
+          <div>
+            <div class="eyebrow">{{ rows().length }} bản ghi</div>
+            <h2>{{ activeMenu().label }}</h2>
+          </div>
+          <button type="button" class="add-button">Thêm mới</button>
+        </div>
+
+        <div class="content-panel-body">
+          <app-data-table [columns]="displayColumns()" [rows]="rows()" [loading]="isLoading()" />
+        </div>
+      </section>
+    }
+  </section>
+</main>

@@ -1,0 +1,38 @@
+<div class="data-table-wrap">
+  <table class="table align-middle mb-0 data-table">
+    <thead>
+      <tr>
+        @for (column of columns(); track column) {
+          <th>{{ columnLabel(column) }}</th>
+        }
+        <th class="text-end">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading()) {
+        <tr>
+          <td [attr.colspan]="columns().length + 1" class="table-state">
+            Đang tải dữ liệu...
+          </td>
+        </tr>
+      } @else if (rows().length) {
+        @for (row of rows(); track $index) {
+          <tr>
+            @for (column of columns(); track column) {
+              <td>{{ displayValue(cellValue(row, column)) }}</td>
+            }
+            <td class="text-end">
+              <button type="button" class="btn btn-sm edit-button" (click)="edit.emit(row)">Sửa</button>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td [attr.colspan]="columns().length + 1" class="table-state">
+            {{ emptyText() }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

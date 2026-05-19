@@ -1,0 +1,22 @@
+<section class="students-panel">
+  <div class="students-panel-header">
+    <div>
+      <div class="eyebrow">{{ rows().length }} bản ghi</div>
+      <h2>Sinh viên</h2>
+      <p>Quản lý hồ sơ sinh viên, thông tin lớp và trạng thái tài khoản.</p>
+    </div>
+    <button type="button" class="add-button">Thêm sinh viên</button>
+  </div>
+
+  <div class="students-toolbar">
+    <div>
+      <strong>Danh sách sinh viên</strong>
+      <span>Dữ liệu sinh viên từ EduCore API</span>
+    </div>
+    <span class="status-pill">{{ loading() ? 'Đang tải' : 'Sẵn sàng' }}</span>
+  </div>
+
+  <div class="students-table">
+    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" />
+  </div>
+</section>

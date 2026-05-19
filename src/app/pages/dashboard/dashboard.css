@@ -1,0 +1,505 @@
+.dashboard-shell {
+  display: grid;
+  grid-template-columns: 18rem minmax(0, 1fr);
+  min-height: 100vh;
+  color: #172033;
+  background: #f3f7fb;
+}
+
+.dashboard-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 1rem 0.85rem;
+  border-right: 1px solid #dce6f2;
+  background: #ffffff;
+  box-shadow: 0.35rem 0 1.5rem rgba(15, 23, 42, 0.05);
+}
+
+.brand-panel,
+.nav-link,
+.topbar,
+.overview-card,
+.quick-action,
+.overview-panel,
+.content-panel {
+  border: 1px solid #dce6f2;
+  background: #ffffff;
+}
+
+.brand-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.55rem 1.4rem;
+  border-width: 0 0 1px;
+  background: transparent;
+}
+
+.brand-mark,
+.nav-icon,
+.overview-icon,
+.quick-action > span,
+.user-chip > span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: #ffffff;
+  background: #1677e8;
+}
+
+.brand-mark {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.brand-name {
+  color: #0f172a;
+  font-size: 1.22rem;
+  font-weight: 850;
+}
+
+.nav {
+  padding-top: 0.9rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 3rem;
+  padding: 0.65rem 0.8rem;
+  color: #50627c;
+  border-color: transparent;
+  border-radius: 0.7rem;
+  font-weight: 650;
+  text-align: left;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #0f67d8;
+  background: #eaf3ff;
+}
+
+.nav-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  color: #1677e8;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.dashboard-main {
+  min-width: 0;
+  padding: 0 3rem 2rem;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.6rem;
+  margin: 0 -3rem 3rem;
+  padding: 0 3rem;
+  border-width: 0;
+  background: #1267c8;
+  box-shadow: 0 0.75rem 1.8rem rgba(18, 103, 200, 0.18);
+}
+
+.academy-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  color: #ffffff;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 0.9rem;
+}
+
+.academy-pill span {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #14b8a6;
+}
+
+.topbar-actions,
+.user-chip,
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.campus-button,
+.action-button,
+.add-button {
+  min-height: 2.55rem;
+  padding: 0 1rem;
+  color: #0f172a;
+  border: 1px solid #d7e4f2;
+  border-radius: 0.7rem;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+.action-button.primary,
+.add-button {
+  color: #ffffff;
+  border-color: #1677e8;
+  background: #1677e8;
+}
+
+.action-button.ghost {
+  background: #ffffff;
+}
+
+.user-chip > span {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  font-weight: 850;
+}
+
+.user-chip strong,
+.user-chip small {
+  display: block;
+}
+
+.user-chip strong {
+  color: #ffffff;
+}
+
+.user-chip small {
+  color: #dbeafe;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2.2rem;
+}
+
+.eyebrow,
+.section-title {
+  color: #1677e8;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-header h1 {
+  margin: 0 0 0.45rem;
+  color: #0f172a;
+  font-size: 1.9rem;
+  font-weight: 850;
+}
+
+.page-header p {
+  margin: 0;
+  color: #5f6f86;
+}
+
+.alert-panel {
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.25rem;
+  color: #fed7aa;
+  border: 1px solid #7c2d12;
+  border-radius: 0.8rem;
+  background: #431407;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.2rem;
+}
+
+.overview-card {
+  min-height: 15rem;
+  padding: 1.65rem;
+  border-radius: 1rem;
+  box-shadow: 0 0.75rem 1.75rem rgba(15, 23, 42, 0.06);
+}
+
+.overview-icon,
+.quick-action > span {
+  width: 3.55rem;
+  height: 3.55rem;
+  border-radius: 0.9rem;
+  margin-bottom: 1.45rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.overview-card small {
+  float: right;
+  color: #34d399;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.overview-card strong,
+.overview-card span {
+  clear: both;
+  display: block;
+}
+
+.overview-card strong {
+  margin-top: 1.25rem;
+  color: #0f172a;
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.overview-card span {
+  margin-top: 0.7rem;
+  color: #64748b;
+}
+
+.tone-classes .overview-icon {
+  background: #7c3aed;
+}
+
+.tone-subjects .overview-icon {
+  background: #059669;
+}
+
+.tone-warnings .overview-icon {
+  background: #f59e0b;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(22rem, 0.75fr) minmax(0, 1.55fr);
+  gap: 1.75rem;
+}
+
+.section-title {
+  margin-bottom: 1rem;
+}
+
+.quick-actions {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.quick-action {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.05rem 1.15rem;
+  color: #0f172a;
+  border-radius: 0.9rem;
+  text-align: left;
+}
+
+.quick-action > span {
+  width: 3rem;
+  height: 3rem;
+  margin: 0;
+  color: #1677e8;
+  background: #eaf3ff;
+  font-size: 1rem;
+}
+
+.quick-action strong,
+.quick-action small {
+  display: block;
+}
+
+.quick-action small {
+  color: #64748b;
+}
+
+.quick-action b {
+  color: #1677e8;
+  font-size: 1.35rem;
+}
+
+.overview-panel {
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.overview-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem 1.35rem;
+  border-bottom: 1px solid #e4edf7;
+}
+
+.overview-line:last-child {
+  border-bottom: 0;
+}
+
+.overview-line span {
+  color: #4b5f79;
+}
+
+.overview-line strong {
+  color: #0f172a;
+  font-size: 1.2rem;
+}
+
+.overview-line.warning strong {
+  color: #f87171;
+}
+
+.content-panel {
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.content-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.3rem;
+  border-bottom: 1px solid #e4edf7;
+}
+
+.content-panel-header h2 {
+  margin: 0.2rem 0 0;
+  color: #0f172a;
+  font-size: 1.25rem;
+  font-weight: 850;
+}
+
+.content-panel-body {
+  padding: 1rem;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-shell {
+    grid-template-columns: 15.5rem minmax(0, 1fr);
+  }
+
+  .dashboard-main {
+    padding-inline: 1.5rem;
+  }
+
+  .topbar {
+    margin-inline: -1.5rem;
+    padding-inline: 1.5rem;
+  }
+
+  .overview-grid,
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 991.98px) {
+  .dashboard-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar {
+    position: static;
+    height: auto;
+    padding-bottom: 0.7rem;
+  }
+
+  .nav {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.45rem !important;
+    padding-bottom: 0.25rem;
+  }
+
+  .nav-link {
+    flex: 0 0 auto;
+    min-height: 2.7rem;
+  }
+
+  .dashboard-main {
+    padding: 0 1rem 1.5rem;
+  }
+
+  .topbar {
+    margin: 0 -1rem 2rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar,
+  .page-header,
+  .content-panel-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .overview-grid,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar-actions,
+  .header-actions {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .campus-button,
+  .action-button,
+  .add-button {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .overview-card {
+    min-height: 11.5rem;
+    padding: 1.2rem;
+  }
+
+  .quick-action {
+    grid-template-columns: auto 1fr;
+  }
+
+  .quick-action b {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-panel {
+    padding-inline: 0.25rem;
+  }
+
+  .topbar-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .user-chip {
+    justify-content: flex-start;
+  }
+
+  .page-header h1 {
+    font-size: 1.55rem;
+  }
+
+  .overview-card strong {
+    font-size: 1.85rem;
+  }
+
+  .content-panel-body {
+    padding: 0.7rem;
+  }
+}
