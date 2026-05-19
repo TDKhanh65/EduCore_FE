@@ -8,7 +8,7 @@
               <div class="brand-mark">EC</div>
               <div>
                 <h1 class="h3 mb-1">EduCore</h1>
-                <p class="text-secondary mb-0">Dang nhap quan ly diem sinh vien</p>
+                <p class="text-secondary mb-0">Đăng nhập quản lý điểm sinh viên</p>
               </div>
             </div>
 
@@ -18,17 +18,17 @@
 
             <form (ngSubmit)="login()" class="d-grid gap-3">
               <div>
-                <label for="username" class="form-label fw-semibold">Tai khoan</label>
+                <label for="username" class="form-label fw-semibold">Tài khoản</label>
                 <input id="username" name="username" class="form-control form-control-lg" [(ngModel)]="loginForm.username" autocomplete="username" required />
               </div>
 
               <div>
-                <label for="password" class="form-label fw-semibold">Mat khau</label>
+                <label for="password" class="form-label fw-semibold">Mật khẩu</label>
                 <input id="password" name="password" type="password" class="form-control form-control-lg" [(ngModel)]="loginForm.password" autocomplete="current-password" required />
               </div>
 
               <button type="submit" class="btn btn-primary btn-lg mt-2" [disabled]="isLoading()">
-                {{ isLoading() ? 'Dang dang nhap...' : 'Dang nhap' }}
+                {{ isLoading() ? 'Đang đăng nhập...' : 'Đăng nhập' }}
               </button>
             </form>
           </div>

@@ -1,7 +1,35 @@
 .login-page {
   background:
-    linear-gradient(rgba(12, 74, 110, 0.76), rgba(15, 23, 42, 0.82)),
+    linear-gradient(rgba(3, 7, 18, 0.86), rgba(15, 23, 42, 0.9)),
     url("https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1800&q=80") center/cover;
+}
+
+.card {
+  color: #f8fafc;
+  border: 1px solid #243244 !important;
+  border-radius: 1rem;
+  background: #111827;
+}
+
+.text-secondary {
+  color: #9ca3af !important;
+}
+
+.form-label {
+  color: #dbeafe;
+}
+
+.form-control {
+  color: #f8fafc;
+  border-color: #334155;
+  background: #0f172a;
+}
+
+.form-control:focus {
+  color: #ffffff;
+  border-color: #2563eb;
+  background: #0f172a;
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.2);
 }
 
 .brand-mark {
@@ -13,4 +41,20 @@
   color: #ffffff;
   background: #0d6efd;
   font-weight: 900;
+}
+
+@media (max-width: 575.98px) {
+  .login-page {
+    align-items: stretch !important;
+    padding: 1rem 0 !important;
+  }
+
+  .card-body {
+    padding: 1.35rem !important;
+  }
+
+  .brand-mark {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
 }

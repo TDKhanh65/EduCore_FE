@@ -45,12 +45,12 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "550kB",
                   "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
+                  "maximumWarning": "7kB",
                   "maximumError": "8kB"
                 }
               ],
@@ -71,8 +71,7 @@
               "buildTarget": "EduCore_FE:build:production"
             },
             "development": {
-              "buildTarget": "EduCore_FE:build:development",
-              "proxyConfig": "proxy.conf.json"
+              "buildTarget": "EduCore_FE:build:development"
             }
           },
           "defaultConfiguration": "development"

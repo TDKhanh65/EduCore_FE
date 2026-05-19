@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Student grade management">
+  <rect width="64" height="64" rx="14" fill="#0f766e"/>
+  <path d="M18 13h28a5 5 0 0 1 5 5v32a5 5 0 0 1-5 5H18a5 5 0 0 1-5-5V18a5 5 0 0 1 5-5Z" fill="#f8fafc"/>
+  <path d="M21 22h20M21 31h12M21 40h12" stroke="#0f766e" stroke-width="4" stroke-linecap="round"/>
+  <path d="m38 39 4 4 8-10" fill="none" stroke="#22c55e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M23 9 8 16l15 7 15-7-15-7Z" fill="#f59e0b"/>
+  <path d="M13 18v8c3 4 16 4 20 0v-8" fill="#fbbf24"/>
+  <path d="M45 24h2.8l7.2 17h-3.7l-1.3-3.3h-7.3L42.4 41h-3.6L45 24Zm3.9 10.8-2.5-6.3-2.5 6.3h5Z" fill="#1e293b"/>
+  <path d="M53 24h3v5h4v3h-4v5h-3v-5h-4v-3h4v-5Z" fill="#1e293b"/>
+</svg>
