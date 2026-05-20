@@ -1,0 +1,212 @@
+.scores-panel {
+  overflow: hidden;
+  border: 1px solid #d8e3f0;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 0.75rem 1.75rem rgba(15, 23, 42, 0.06);
+}
+
+.scores-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.3rem;
+  border-bottom: 1px solid #d8e3f0;
+}
+
+.eyebrow {
+  color: #1677e8;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scores-panel-header h2 {
+  margin: 0.2rem 0 0;
+  color: #0f172a;
+  font-size: 1.25rem;
+  font-weight: 850;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.add-button,
+.export-button {
+  min-height: 2.55rem;
+  padding: 0 1rem;
+  border-radius: 0.7rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.add-button {
+  color: #ffffff;
+  border: 1px solid #1677e8;
+  background: #1677e8;
+}
+
+.export-button {
+  color: #1267c8;
+  border: 1px solid #b8d5f8;
+  background: #eef6ff;
+}
+
+.scores-table-wrap {
+  overflow-x: auto;
+  margin: 1rem;
+  border: 1px solid #d7e4f2;
+  border-radius: 0.85rem;
+  background: #ffffff;
+}
+
+.scores-alert {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 0.75rem;
+  background: #fef2f2;
+  font-weight: 700;
+}
+
+.scores-table {
+  min-width: 980px;
+  --bs-table-bg: #ffffff;
+  --bs-table-color: #1e293b;
+  --bs-table-border-color: #dce8f5;
+  --bs-table-hover-bg: #eff6ff;
+  --bs-table-hover-color: #0f172a;
+}
+
+.scores-table > thead > tr > th {
+  padding: 0.9rem 1rem;
+  color: #2f5f9e;
+  background: #edf5ff;
+  border-bottom: 1px solid #d7e4f2;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.scores-table > tbody > tr > td {
+  padding: 0.95rem 1rem;
+  color: #182638;
+  background: #ffffff;
+  border-color: #e0ebf6;
+  font-size: 0.94rem;
+  white-space: nowrap;
+}
+
+.scores-table > tbody > tr:hover > td {
+  background: #eff6ff;
+}
+
+.student-name {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.average-score,
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.2rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 0.6rem;
+  font-weight: 800;
+}
+
+.average-score {
+  color: #0f5fc8;
+  background: #eaf3ff;
+}
+
+.grade-badge {
+  color: #0f766e;
+  background: #dff8f4;
+}
+
+.scores-state {
+  padding: 3rem 1rem !important;
+  color: #64748b !important;
+  text-align: center;
+}
+
+.edit-button {
+  min-width: 4.1rem;
+  color: #1267c8;
+  border: 1px solid #9cc5ff;
+  border-radius: 0.65rem;
+  background: #eef6ff;
+  font-weight: 750;
+}
+
+.edit-button:hover {
+  color: #ffffff;
+  border-color: #1677e8;
+  background: #1677e8;
+}
+
+.row-actions {
+  display: inline-flex;
+  gap: 0.45rem;
+}
+
+.delete-button {
+  min-width: 4.1rem;
+  color: #b42318;
+  border: 1px solid #f5b5af;
+  border-radius: 0.65rem;
+  background: #fff1f0;
+  font-weight: 750;
+}
+
+.delete-button:hover {
+  color: #ffffff;
+  border-color: #dc2626;
+  background: #dc2626;
+}
+
+@media (max-width: 700px) {
+  .scores-table-wrap {
+    margin: 0 -0.35rem;
+    border-radius: 0.7rem;
+  }
+
+  .scores-panel-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .header-buttons {
+    flex-direction: column;
+  }
+
+  .add-button,
+  .export-button {
+    width: 100%;
+  }
+
+  .scores-table {
+    min-width: 840px;
+  }
+
+  .scores-table > thead > tr > th,
+  .scores-table > tbody > tr > td {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.82rem;
+  }
+
+  .edit-button {
+    min-width: 3.4rem;
+  }
+}

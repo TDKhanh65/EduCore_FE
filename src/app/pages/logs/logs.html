@@ -1,0 +1,18 @@
+<section class="entity-panel">
+  <div class="entity-panel-header">
+    <div>
+      <div class="eyebrow">{{ rows().length }} bản ghi</div>
+      <h2>Nhật ký</h2>
+      <p>Kiểm tra các thao tác gần đây trong hệ thống.</p>
+    </div>
+    <button type="button" class="add-button" (click)="exportCsv()">Xuất file</button>
+  </div>
+
+  @if (message()) {
+    <div class="entity-alert">{{ message() }}</div>
+  }
+
+  <div class="entity-table">
+    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" [showActions]="false" />
+  </div>
+</section>

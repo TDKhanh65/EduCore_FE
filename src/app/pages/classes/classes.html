@@ -1,0 +1,32 @@
+<section class="entity-panel">
+  <div class="entity-panel-header">
+    <div>
+      <div class="eyebrow">{{ rows().length }} bản ghi</div>
+      <h2>Lớp học</h2>
+      <p>Danh sách lớp, khoa và giáo viên chủ nhiệm.</p>
+    </div>
+    <div class="header-buttons">
+      <button type="button" class="export-button" (click)="exportCsv()">Xuất file</button>
+      <button type="button" class="add-button" (click)="openCreate()">Thêm mới</button>
+    </div>
+  </div>
+
+  @if (message()) {
+    <div class="entity-alert">{{ message() }}</div>
+  }
+
+  <div class="entity-table">
+    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" (edit)="openEdit($event)" (remove)="deleteClass($event)" />
+  </div>
+
+  @if (formOpen()) {
+    <app-entity-form
+      [title]="editingRow() ? 'Sửa lớp học' : 'Thêm lớp học'"
+      [fields]="formFields"
+      [initialValues]="editingRow() ?? {}"
+      [saving]="saving()"
+      (cancel)="closeForm()"
+      (save)="saveClass($event)"
+    />
+  }
+</section>

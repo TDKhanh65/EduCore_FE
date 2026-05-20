@@ -15,6 +15,7 @@ export const API_ENDPOINT = {
   },
   ROLES: {
     ROOT: '/api/roles',
+    BY_ID: (id: string | number) => `/api/roles/${id}`,
     PERMISSIONS: '/api/roles/permissions',
     PERMISSIONS_BY_ROLE: (roleId: string | number) => `/api/roles/${roleId}/permissions`,
     MODULE_PERMISSIONS: '/api/roles/permissions/module',

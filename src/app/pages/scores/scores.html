@@ -1,0 +1,75 @@
+<section class="scores-panel">
+  <div class="scores-panel-header">
+    <div>
+      <div class="eyebrow">{{ rows().length }} bản ghi</div>
+      <h2>Điểm số</h2>
+    </div>
+    <div class="header-buttons">
+      <button type="button" class="export-button" (click)="exportCsv()">Xuất file</button>
+      <button type="button" class="add-button" (click)="openCreate()">Thêm mới</button>
+    </div>
+  </div>
+
+  @if (message()) {
+    <div class="scores-alert">{{ message() }}</div>
+  }
+
+  <div class="scores-table-wrap">
+    <table class="table align-middle mb-0 scores-table">
+      <thead>
+        <tr>
+          <th>Sinh viên</th>
+          <th>Môn học</th>
+          <th>Học kỳ</th>
+          <th>Chuyên cần</th>
+          <th>Giữa kỳ</th>
+          <th>Cuối kỳ</th>
+          <th>Trung bình</th>
+          <th>Xếp loại</th>
+          <th class="text-end">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          <tr>
+            <td colspan="9" class="scores-state">Đang tải dữ liệu...</td>
+          </tr>
+        } @else if (scoreRows().length) {
+          @for (row of scoreRows(); track row.id ?? $index) {
+            <tr>
+              <td><strong class="student-name">{{ row.studentName }}</strong></td>
+              <td>{{ row.subjectName }}</td>
+              <td>{{ row.semesterId }}</td>
+              <td>{{ row.attendanceScore }}</td>
+              <td>{{ row.midtermScore }}</td>
+              <td>{{ row.finalScore }}</td>
+              <td><span class="average-score">{{ row.averageScore }}</span></td>
+              <td><span class="grade-badge">{{ row.gradeLetter }}</span></td>
+              <td class="text-end">
+                <div class="row-actions">
+                  <button type="button" class="btn btn-sm edit-button" (click)="openEdit(row.source)">Sửa</button>
+                  <button type="button" class="btn btn-sm delete-button" (click)="deleteScore(row.source)">Xóa</button>
+                </div>
+              </td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="9" class="scores-state">Chưa có dữ liệu điểm số để hiển thị.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (formOpen()) {
+    <app-entity-form
+      [title]="editingRow() ? 'Sửa điểm số' : 'Thêm điểm số'"
+      [fields]="formFields"
+      [initialValues]="editingRow() ?? {}"
+      [saving]="saving()"
+      (cancel)="closeForm()"
+      (save)="saveScore($event)"
+    />
+  }
+</section>

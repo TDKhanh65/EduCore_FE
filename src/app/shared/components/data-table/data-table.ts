@@ -11,11 +11,22 @@ export class DataTable {
   readonly columns = input<string[]>([]);
   readonly rows = input<Record<string, unknown>[]>([]);
   readonly loading = input(false);
+  readonly showActions = input(true);
   readonly emptyText = input('Chưa có dữ liệu để hiển thị.');
   readonly edit = output<Record<string, unknown>>();
+  readonly remove = output<Record<string, unknown>>();
 
   columnLabel(column: string): string {
     const labels: Record<string, string> = {
+      ActionCode: 'Thao tác',
+      CreatedAt: 'Thời gian',
+      CreatedBy: 'Người tạo',
+      Description: 'Mô tả',
+      IpAddress: 'IP',
+      ModuleCode: 'Phân hệ',
+      RecordId: 'Bản ghi',
+      TableName: 'Bảng',
+      UserAgent: 'Thiết bị',
       action: 'Thao tác',
       attendanceScore: 'Điểm chuyên cần',
       classCode: 'Lớp',
