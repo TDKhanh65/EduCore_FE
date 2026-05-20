@@ -6,7 +6,7 @@
 }
 
 .data-table {
-  min-width: 720px;
+  min-width: 1080px;
   --bs-table-bg: #ffffff;
   --bs-table-color: #1e293b;
   --bs-table-border-color: #dce8f5;
@@ -58,6 +58,26 @@
   color: #ffffff;
   border-color: #1677e8;
   background: #1677e8;
+}
+
+.row-actions {
+  display: inline-flex;
+  gap: 0.45rem;
+}
+
+.delete-button {
+  min-width: 4.1rem;
+  color: #b42318;
+  border: 1px solid #f5b5af;
+  border-radius: 0.65rem;
+  background: #fff1f0;
+  font-weight: 750;
+}
+
+.delete-button:hover {
+  color: #ffffff;
+  border-color: #dc2626;
+  background: #dc2626;
 }
 
 @media (max-width: 700px) {

@@ -5,8 +5,15 @@
       <h2>Sinh viên</h2>
       <p>Quản lý hồ sơ sinh viên, thông tin lớp và trạng thái tài khoản.</p>
     </div>
-    <button type="button" class="add-button">Thêm sinh viên</button>
+    <div class="header-buttons">
+      <button type="button" class="export-button" (click)="exportCsv()">Xuất file</button>
+      <button type="button" class="add-button" (click)="openCreate()">Thêm sinh viên</button>
+    </div>
   </div>
+
+  @if (message()) {
+    <div class="students-alert">{{ message() }}</div>
+  }
 
   <div class="students-toolbar">
     <div>
@@ -17,6 +24,17 @@
   </div>
 
   <div class="students-table">
-    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" />
+    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" (edit)="openEdit($event)" (remove)="deleteStudent($event)" />
   </div>
+
+  @if (formOpen()) {
+    <app-entity-form
+      [title]="editingRow() ? 'Sửa sinh viên' : 'Thêm sinh viên'"
+      [fields]="formFields"
+      [initialValues]="editingRow() ?? {}"
+      [saving]="saving()"
+      (cancel)="closeForm()"
+      (save)="saveStudent($event)"
+    />
+  }
 </section>
