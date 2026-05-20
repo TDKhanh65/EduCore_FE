@@ -23,12 +23,20 @@ export class APIService {
   ): Observable<HttpResponse<T>> {
     const headers = options?.headers ?? this.getAuthHeaders();
 
-    return this.http.request<T>(method, `${environment.apiHost}${url}`, {
+    return this.http.request<T>(method, `${this.getApiHost()}${url}`, {
       body: options?.body,
       headers,
       params: options?.params,
       observe: 'response',
     });
+  }
+
+  private getApiHost(): string {
+    if (typeof window !== 'undefined' && window.location.hostname === 'educore-fe.onrender.com') {
+      return '';
+    }
+
+    return environment.apiHost;
   }
 
   private getAuthHeaders(): HttpHeaders | undefined {

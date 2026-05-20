@@ -8,21 +8,46 @@ import express from 'express';
 import { join } from 'node:path';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
+const apiTargetOrigin = process.env['API_TARGET_ORIGIN'] || 'https://educore-uuoe.onrender.com';
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
+app.use('/api/{*splat}', express.raw({ type: '*/*', limit: '10mb' }), async (req, res, next) => {
+  try {
+    const targetUrl = new URL(req.originalUrl, apiTargetOrigin);
+    const headers = new Headers();
+
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (!value || ['host', 'connection', 'content-length'].includes(key.toLowerCase())) {
+        continue;
+      }
+
+      if (Array.isArray(value)) {
+        value.forEach((headerValue) => headers.append(key, headerValue));
+      } else {
+        headers.set(key, value);
+      }
+    }
+
+    const response = await fetch(targetUrl, {
+      method: req.method,
+      headers,
+      body: ['GET', 'HEAD'].includes(req.method) ? undefined : req.body,
+    });
+
+    res.status(response.status);
+    response.headers.forEach((value, key) => {
+      if (!['content-encoding', 'content-length', 'transfer-encoding'].includes(key.toLowerCase())) {
+        res.setHeader(key, value);
+      }
+    });
+
+    res.send(Buffer.from(await response.arrayBuffer()));
+  } catch (error) {
+    next(error);
+  }
+});
 
 /**
  * Serve static files from /browser
