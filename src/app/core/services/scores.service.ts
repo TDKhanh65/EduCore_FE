@@ -18,6 +18,24 @@ export class ScoresService {
       .pipe(map((response) => toTableRows(unwrapApiData(response.body))));
   }
 
+  getSemesters(): Observable<Record<string, unknown>[]> {
+    return this.apiService
+      .request<unknown>('GET', API_ENDPOINT.SEMESTERS.ROOT)
+      .pipe(map((response) => toTableRows(unwrapApiData(response.body))));
+  }
+
+  getStudents(): Observable<Record<string, unknown>[]> {
+    return this.apiService
+      .request<unknown>('GET', API_ENDPOINT.STUDENTS.ROOT)
+      .pipe(map((response) => toTableRows(unwrapApiData(response.body))));
+  }
+
+  getSubjects(): Observable<Record<string, unknown>[]> {
+    return this.apiService
+      .request<unknown>('GET', API_ENDPOINT.SUBJECTS.ROOT)
+      .pipe(map((response) => toTableRows(unwrapApiData(response.body))));
+  }
+
   createScore(body: Record<string, unknown>): Observable<unknown> {
     return this.apiService.request<unknown>('POST', API_ENDPOINT.SCORES.ROOT, { body });
   }

@@ -1,0 +1,79 @@
+<section class="class-list-panel">
+  <div class="class-list-header">
+    <div>
+      <div class="eyebrow">Danh sách lớp</div>
+      <h2>Tra cứu sinh viên theo lớp</h2>
+    </div>
+    <button type="button" class="export-button" [disabled]="!classStudents().length" (click)="exportExcel()">Xuất Excel</button>
+  </div>
+
+  <div class="class-list-layout">
+    <aside class="class-picker">
+      <label for="class-search">Tìm kiếm lớp</label>
+      <input
+        id="class-search"
+        type="search"
+        [ngModel]="classQuery()"
+        (ngModelChange)="classQuery.set($event)"
+        placeholder="Nhập mã lớp hoặc tên lớp"
+      />
+
+      <div class="class-results">
+        @for (item of filteredClasses(); track cellValue(item, 'id') || cellValue(item, 'Id')) {
+          <button
+            type="button"
+            class="class-result"
+            [class.active]="isSelectedClass(item)"
+            (click)="selectClass(item)"
+          >
+            <strong>{{ cellValue(item, 'classCode') || cellValue(item, 'ClassCode') }}</strong>
+            <span>{{ cellValue(item, 'className') || cellValue(item, 'ClassName') }}</span>
+          </button>
+        } @empty {
+          <div class="empty-state">Không tìm thấy lớp phù hợp.</div>
+        }
+      </div>
+    </aside>
+
+    <div class="student-list">
+      @if (selectedClass()) {
+        <div class="student-list-title">
+          <div>
+            <strong>{{ cellValue(selectedClass()!, 'classCode') || cellValue(selectedClass()!, 'ClassCode') }}</strong>
+            <span>{{ cellValue(selectedClass()!, 'className') || cellValue(selectedClass()!, 'ClassName') }}</span>
+          </div>
+          <small>{{ classStudents().length }} sinh viên</small>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Mã sinh viên</th>
+                <th>Họ và tên</th>
+                <th>Email</th>
+                <th>Lớp</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (student of classStudents(); track cellValue(student, 'id') || cellValue(student, 'Id')) {
+                <tr>
+                  <td><strong>{{ cellValue(student, 'personCode') || cellValue(student, 'PersonCode') }}</strong></td>
+                  <td>{{ cellValue(student, 'fullName') || cellValue(student, 'FullName') }}</td>
+                  <td>{{ cellValue(student, 'email') || cellValue(student, 'Email') }}</td>
+                  <td>{{ cellValue(student, 'classCode') || cellValue(student, 'ClassCode') }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="empty-state">Lớp này chưa có sinh viên.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-hero">Chọn một lớp ở bên trái để xem danh sách sinh viên.</div>
+      }
+    </div>
+  </div>
+</section>

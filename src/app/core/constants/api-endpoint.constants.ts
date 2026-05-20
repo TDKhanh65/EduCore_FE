@@ -9,6 +9,9 @@ export const API_ENDPOINT = {
   DASHBOARD: {
     SUMMARY: '/api/dashboard/summary',
   },
+  FACULTIES: {
+    ROOT: '/api/faculties',
+  },
   LOGS: {
     ACTIONS: '/api/logs/actions',
     LOGINS: '/api/logs/logins',
@@ -31,6 +34,9 @@ export const API_ENDPOINT = {
   SUBJECTS: {
     ROOT: '/api/subjects',
     BY_ID: (id: string | number) => `/api/subjects/${id}`,
+  },
+  SEMESTERS: {
+    ROOT: '/api/semesters',
   },
   UPLOADS: {
     IMAGES: '/api/uploads/images',

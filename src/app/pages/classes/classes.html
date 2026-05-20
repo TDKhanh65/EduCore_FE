@@ -22,7 +22,7 @@
   @if (formOpen()) {
     <app-entity-form
       [title]="editingRow() ? 'Sửa lớp học' : 'Thêm lớp học'"
-      [fields]="formFields"
+      [fields]="formFields()"
       [initialValues]="editingRow() ?? {}"
       [saving]="saving()"
       (cancel)="closeForm()"

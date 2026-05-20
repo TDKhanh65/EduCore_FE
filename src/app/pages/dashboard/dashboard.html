@@ -10,7 +10,6 @@
     <nav class="nav nav-pills flex-lg-column gap-2">
       @for (item of menuItems; track item.id) {
         <button type="button" class="nav-link" [class.active]="activeMenuId() === item.id" (click)="selectMenu(item.id)">
-          <span class="nav-icon">{{ item.icon }}</span>
           <span>{{ item.label }}</span>
         </button>
       }
@@ -19,9 +18,8 @@
 
   <section class="dashboard-main">
     <div class="topbar">
-      <div class="academy-pill"><span></span> educore-academy</div>
+      <div class="academy-pill"><span></span> EduCore Academy</div>
       <div class="topbar-actions">
-        <button type="button" class="campus-button">Bhoothnath Campus</button>
         <div class="user-chip">
           <span>S</span>
           <div>
@@ -55,10 +53,14 @@
       <app-students-page [refreshKey]="refreshKey()" />
     } @else if (activeMenuId() === 'classes') {
       <app-classes-page [refreshKey]="refreshKey()" />
+    } @else if (activeMenuId() === 'classList') {
+      <app-class-list-page [refreshKey]="refreshKey()" />
     } @else if (activeMenuId() === 'subjects') {
       <app-subjects-page [refreshKey]="refreshKey()" />
     } @else if (activeMenuId() === 'scores') {
       <app-scores-page [refreshKey]="refreshKey()" />
+    } @else if (activeMenuId() === 'gradeEntry') {
+      <app-grade-entry-page [refreshKey]="refreshKey()" />
     } @else if (activeMenuId() === 'roles') {
       <app-users-page [refreshKey]="refreshKey()" />
     } @else if (activeMenuId() === 'logs') {

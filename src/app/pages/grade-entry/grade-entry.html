@@ -1,0 +1,118 @@
+<section class="grade-entry-panel">
+  <div class="grade-header">
+    <div>
+      <div class="eyebrow">Nhập điểm</div>
+      <h2>Tìm sinh viên và nhập điểm</h2>
+      <p>Nhập mã số sinh viên hoặc họ tên để chọn sinh viên cần cập nhật điểm.</p>
+    </div>
+  </div>
+
+  @if (message()) {
+    <div class="grade-alert">{{ message() }}</div>
+  }
+
+  <div class="grade-layout">
+    <div class="student-search">
+      <label>
+        <span>Tìm sinh viên</span>
+        <input
+          type="search"
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)"
+          placeholder="Nhập mã hoặc tên sinh viên"
+        />
+      </label>
+
+      <div class="student-results">
+        @for (student of filteredStudents(); track cellValue(student, 'id') || cellValue(student, 'Id')) {
+          <button type="button" [class.active]="isSelectedStudent(student)" (click)="selectStudent(student)">
+            <strong>{{ cellValue(student, 'personCode') || cellValue(student, 'PersonCode') }}</strong>
+            <span>{{ cellValue(student, 'fullName') || cellValue(student, 'FullName') }}</span>
+            <small>{{ cellValue(student, 'classCode') || cellValue(student, 'ClassCode') }}</small>
+          </button>
+        }
+      </div>
+    </div>
+
+    <form class="score-form" (ngSubmit)="saveScore()">
+      <div class="selected-student">
+        <span>Sinh viên</span>
+        <strong>{{ selectedStudent() ? (cellValue(selectedStudent()!, 'personCode') || cellValue(selectedStudent()!, 'PersonCode')) : 'Chưa chọn' }}</strong>
+        <small>{{ selectedStudent() ? (cellValue(selectedStudent()!, 'fullName') || cellValue(selectedStudent()!, 'FullName')) : 'Tìm và chọn sinh viên bên trái' }}</small>
+      </div>
+
+      <label>
+        <span>Môn học</span>
+        <select [ngModel]="subjectId()" name="subjectId" required (ngModelChange)="subjectId.set(+$event)">
+          <option value="">-- Chọn môn học --</option>
+          @for (subject of subjects(); track cellValue(subject, 'id') || cellValue(subject, 'Id')) {
+            <option [value]="cellValue(subject, 'id') || cellValue(subject, 'Id')">
+              {{ cellValue(subject, 'subjectCode') || cellValue(subject, 'SubjectCode') }} - {{ cellValue(subject, 'subjectName') || cellValue(subject, 'SubjectName') }}
+            </option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Học kỳ</span>
+        <select [ngModel]="semesterId()" name="semesterId" required (ngModelChange)="semesterId.set(+$event)">
+          <option value="">-- Chọn học kỳ --</option>
+          @for (semester of semesters(); track cellValue(semester, 'id') || cellValue(semester, 'Id')) {
+            <option [value]="cellValue(semester, 'id') || cellValue(semester, 'Id')">
+              {{ cellValue(semester, 'semesterCode') || cellValue(semester, 'SemesterCode') }} - {{ cellValue(semester, 'schoolYear') || cellValue(semester, 'SchoolYear') }}
+            </option>
+          }
+        </select>
+      </label>
+
+      <div class="score-grid">
+        <label>
+          <span>Chuyên cần</span>
+          <input type="number" min="0" max="10" step="0.01" name="attendanceScore" [ngModel]="attendanceScore()" (ngModelChange)="attendanceScore.set($event === '' ? null : +$event)" />
+        </label>
+        <label>
+          <span>Giữa kỳ</span>
+          <input type="number" min="0" max="10" step="0.01" name="midtermScore" [ngModel]="midtermScore()" (ngModelChange)="midtermScore.set($event === '' ? null : +$event)" />
+        </label>
+        <label>
+          <span>Cuối kỳ</span>
+          <input type="number" min="0" max="10" step="0.01" name="finalScore" [ngModel]="finalScore()" (ngModelChange)="finalScore.set($event === '' ? null : +$event)" />
+        </label>
+      </div>
+
+      <button type="submit" class="primary-button" [disabled]="saving()">{{ saving() ? 'Đang lưu...' : 'Lưu điểm' }}</button>
+    </form>
+  </div>
+
+  @if (selectedStudentId()) {
+    <div class="score-history">
+      <h3>Các môn đã có điểm</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Môn học</th>
+            <th>Chuyên cần</th>
+            <th>Giữa kỳ</th>
+            <th>Cuối kỳ</th>
+            <th>Trung bình</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (score of studentScores(); track cellValue(score, 'id') || cellValue(score, 'Id')) {
+            <tr>
+              <td>{{ cellValue(score, 'subjectName') || cellValue(score, 'SubjectName') }}</td>
+              <td>{{ cellValue(score, 'attendanceScore') || cellValue(score, 'AttendanceScore') }}</td>
+              <td>{{ cellValue(score, 'midtermScore') || cellValue(score, 'MidtermScore') }}</td>
+              <td>{{ cellValue(score, 'finalScore') || cellValue(score, 'FinalScore') }}</td>
+              <td>{{ cellValue(score, 'averageScore') || cellValue(score, 'AverageScore') }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5">Sinh viên này chưa có điểm.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

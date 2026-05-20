@@ -1,0 +1,114 @@
+.grade-entry-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.grade-header, .grade-layout, .score-history {
+  background: #fff;
+  border: 1px solid #dbe7f5;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.grade-header h2 {
+  margin: 4px 0;
+  color: #13233a;
+}
+
+.grade-alert {
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.grade-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) 1fr;
+  gap: 18px;
+}
+
+.student-search label, .score-form label {
+  display: grid;
+  gap: 7px;
+  color: #30415f;
+  font-weight: 700;
+}
+
+.student-search input, .score-form input, .score-form select {
+  height: 42px;
+  border: 1px solid #c9d8ed;
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+.student-results {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  max-height: 430px;
+  overflow: auto;
+}
+
+.student-results button {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  border: 1px solid #dbe7f5;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.student-results button.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.score-form {
+  display: grid;
+  gap: 14px;
+}
+
+.selected-student {
+  display: grid;
+  gap: 4px;
+  border: 1px solid #dbe7f5;
+  background: #f8fbff;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.primary-button {
+  justify-self: end;
+  border: 0;
+  border-radius: 8px;
+  background: #1d75e8;
+  color: #fff;
+  font-weight: 800;
+  padding: 11px 20px;
+}
+
+.score-history table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.score-history th, .score-history td {
+  border-bottom: 1px solid #e3ebf6;
+  padding: 11px;
+  text-align: left;
+}
+
+@media (max-width: 860px) {
+  .grade-layout, .score-grid {
+    grid-template-columns: 1fr;
+  }
+}

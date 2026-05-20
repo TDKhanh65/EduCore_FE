@@ -18,6 +18,12 @@ export class ClassesService {
       .pipe(map((response) => toTableRows(unwrapApiData(response.body))));
   }
 
+  getFaculties(): Observable<Record<string, unknown>[]> {
+    return this.apiService
+      .request<unknown>('GET', API_ENDPOINT.FACULTIES.ROOT)
+      .pipe(map((response) => toTableRows(unwrapApiData(response.body))));
+  }
+
   createClass(body: Record<string, unknown>): Observable<unknown> {
     return this.apiService.request<unknown>('POST', API_ENDPOINT.CLASSES.ROOT, { body });
   }

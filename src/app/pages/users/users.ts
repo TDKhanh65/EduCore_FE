@@ -46,7 +46,7 @@ export class UsersPage {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (rows) => this.rows.set(rows),
-        error: () => this.message.set('Không tải được danh sách người dùng. Vui lòng thử lại sau.'),
+        error: () => this.message.set('Không tải được danh sách vai trò. Vui lòng thử lại sau.'),
       });
   }
 
@@ -79,7 +79,7 @@ export class UsersPage {
         this.formOpen.set(false);
         this.loadUsers();
       },
-      error: () => this.message.set('Không lưu được người dùng/vai trò. Nếu backend chưa có API role CRUD thì cần viết ở BE.'),
+      error: () => this.message.set('Không lưu được vai trò. Nếu backend chưa có API role CRUD thì cần viết ở BE.'),
     });
   }
 
@@ -97,6 +97,6 @@ export class UsersPage {
   }
 
   exportCsv(): void {
-    exportRowsToCsv('nguoi-dung.csv', this.rows(), this.columns);
+    exportRowsToCsv('vai-tro.csv', this.rows(), this.columns);
   }
 }

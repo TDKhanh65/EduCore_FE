@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { finalize } from 'rxjs';
 
 import { StudentsService } from '@services/students.service';
@@ -18,24 +18,39 @@ export class StudentsPage {
 
   readonly refreshKey = input(0);
   readonly rows = signal<Record<string, unknown>[]>([]);
+  readonly classes = signal<Record<string, unknown>[]>([]);
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly message = signal('');
   readonly columns = ['personCode', 'fullName', 'email', 'classCode', 'isActive'];
   readonly formOpen = signal(false);
   readonly editingRow = signal<Record<string, unknown> | null>(null);
-  readonly formFields: EntityFormField[] = [
-    { key: 'personCode', label: 'Mã sinh viên', type: 'text', required: true },
+  readonly formFields = computed<EntityFormField[]>(() => [
+    ...(this.editingRow()
+      ? [{ key: 'personCode', label: 'Mã sinh viên', type: 'text', readonly: true } satisfies EntityFormField]
+      : []),
     { key: 'fullName', label: 'Họ tên', type: 'text', required: true },
-    { key: 'email', label: 'Email', type: 'text', required: true },
-    { key: 'classId', label: 'Lớp ID', type: 'number', required: true },
+    ...(this.editingRow()
+      ? [{ key: 'email', label: 'Email', type: 'text', readonly: true } satisfies EntityFormField]
+      : []),
+    {
+      key: 'classId',
+      label: 'Lớp',
+      type: 'select',
+      required: true,
+      options: this.classes().map((item) => ({
+        value: Number(cellValue(item, 'id') || cellValue(item, 'Id')),
+        label: `${cellValue(item, 'classCode') || cellValue(item, 'ClassCode')} - ${cellValue(item, 'className') || cellValue(item, 'ClassName')}`,
+      })),
+    },
     { key: 'isActive', label: 'Trạng thái', type: 'boolean' },
-  ];
+  ]);
 
   constructor() {
     effect(() => {
       this.refreshKey();
       this.loadStudents();
+      this.loadClasses();
     });
   }
 
@@ -48,8 +63,14 @@ export class StudentsPage {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (rows) => this.rows.set(rows),
-        error: () => this.message.set('Không tải được danh sách sinh viên. Vui lòng thử lại sau.'),
+        error: () => this.message.set('Không tải được danh sách sinh viên.'),
       });
+  }
+
+  private loadClasses(): void {
+    this.studentsService
+      .getClasses()
+      .subscribe({ next: (rows) => this.classes.set(rows) });
   }
 
   openCreate(): void {
@@ -69,7 +90,8 @@ export class StudentsPage {
   saveStudent(values: Record<string, unknown>): void {
     const editing = this.editingRow();
     const id = editing ? cellValue(editing, 'id') || cellValue(editing, 'Id') : null;
-    const payload = withAudit(values, editing ? 'updatedBy' : 'createdBy');
+    const { personCode: _personCode, email: _email, id: _id, Id: _pascalId, ...editableValues } = values;
+    const payload = { ...editableValues, [editing ? 'updatedBy' : 'createdBy']: currentActor() };
     const request = editing && id
       ? this.studentsService.updateStudent(id as string | number, payload)
       : this.studentsService.createStudent(payload);
@@ -81,7 +103,7 @@ export class StudentsPage {
         this.formOpen.set(false);
         this.loadStudents();
       },
-      error: () => this.message.set('Không lưu được sinh viên. Vui lòng kiểm tra dữ liệu và thử lại.'),
+      error: () => this.message.set('Không lưu được sinh viên. Hãy kiểm tra dữ liệu.'),
     });
   }
 
@@ -97,17 +119,13 @@ export class StudentsPage {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: () => this.loadStudents(),
-        error: () => this.message.set('Không xóa được sinh viên. Vui lòng thử lại sau.'),
+        error: () => this.message.set('Không xóa được sinh viên. Hãy chạy lại backend mới nhất rồi thử lại.'),
       });
   }
 
   exportCsv(): void {
     exportRowsToCsv('sinh-vien.csv', this.rows(), this.columns);
   }
-}
-
-function withAudit(values: Record<string, unknown>, auditKey: 'createdBy' | 'updatedBy'): Record<string, unknown> {
-  return { ...values, [auditKey]: values[auditKey] || currentActor() };
 }
 
 function currentActor(): string {

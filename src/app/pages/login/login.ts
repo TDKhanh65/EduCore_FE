@@ -35,14 +35,14 @@ export class Login {
         {
           id: 'auth-login',
           group: 'Auth',
-          name: 'Dang nhap',
+          name: 'Đăng nhập',
           description: '',
           method: 'POST',
           path: API_ENDPOINT.AUTH.LOGIN,
           tone: 'create',
           fields: [
             { key: 'username', label: 'Username', type: 'text', location: 'body' },
-            { key: 'password', label: 'Mat khau', type: 'password', location: 'body' },
+            { key: 'password', label: 'Mật khẩu', type: 'password', location: 'body' },
           ],
         },
         this.loginForm as unknown as ApiFormValues,
@@ -54,12 +54,12 @@ export class Login {
         const body = result.body as { isSuccess?: boolean; data?: unknown; message?: string } | null;
 
         if (!ok || body?.isSuccess === false) {
-          this.errorMessage.set(body?.message || 'Dang nhap that bai. Vui long kiem tra tai khoan hoac API.');
+          this.errorMessage.set(body?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra tài khoản hoặc API.');
           return;
         }
 
         if (!body?.data) {
-          this.errorMessage.set('Dang nhap that bai. Vui long kiem tra tai khoan hoac API.');
+          this.errorMessage.set('Đăng nhập thất bại. Vui lòng kiểm tra tài khoản hoặc API.');
           return;
         }
 

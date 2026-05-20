@@ -12,17 +12,33 @@
           @if (field.type === 'boolean') {
             <select
               [name]="field.key"
+              [disabled]="field.readonly ?? false"
               [ngModel]="values()[field.key] ?? true"
               (ngModelChange)="setValue(field.key, $event === 'true')"
             >
               <option value="true">Đang hoạt động</option>
               <option value="false">Tạm dừng</option>
             </select>
+          } @else if (field.type === 'select') {
+            <select
+              [name]="field.key"
+              [required]="field.required ?? false"
+              [disabled]="field.readonly ?? false"
+              [ngModel]="values()[field.key] ?? ''"
+              (ngModelChange)="setValue(field.key, $event === '' ? null : +$event)"
+            >
+              <option value="">-- Chọn --</option>
+              @for (option of field.options ?? []; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
           } @else {
             <input
               [name]="field.key"
               [type]="field.type"
               [required]="field.required ?? false"
+              [min]="field.min ?? null"
+              [readonly]="field.readonly ?? false"
               [ngModel]="values()[field.key] ?? ''"
               (ngModelChange)="setValue(field.key, field.type === 'number' ? ($event === '' ? null : +$event) : $event)"
             />

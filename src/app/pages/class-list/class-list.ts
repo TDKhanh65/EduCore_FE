@@ -1,0 +1,89 @@
+import { CommonModule } from '@angular/common';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+import { ClassesService } from '@services/classes.service';
+import { StudentsService } from '@services/students.service';
+import { cellValue, exportRowsToExcel } from '@shared/helpers';
+
+@Component({
+  selector: 'app-class-list-page',
+  imports: [CommonModule, FormsModule],
+  templateUrl: './class-list.html',
+  styleUrl: './class-list.css',
+})
+export class ClassListPage {
+  private readonly classesService = inject(ClassesService);
+  private readonly studentsService = inject(StudentsService);
+
+  readonly cellValue = cellValue;
+  readonly refreshKey = input(0);
+  readonly classes = signal<Record<string, unknown>[]>([]);
+  readonly students = signal<Record<string, unknown>[]>([]);
+  readonly classQuery = signal('');
+  readonly selectedClassId = signal<number | null>(null);
+
+  readonly filteredClasses = computed(() => {
+    const keyword = normalize(this.classQuery());
+    const rows = this.classes();
+    if (!keyword) {
+      return rows.slice(0, 20);
+    }
+
+    return rows
+      .filter((item) => {
+        const code = normalize(cellValue(item, 'classCode') || cellValue(item, 'ClassCode'));
+        const name = normalize(cellValue(item, 'className') || cellValue(item, 'ClassName'));
+        return code.includes(keyword) || name.includes(keyword);
+      })
+      .slice(0, 30);
+  });
+
+  readonly selectedClass = computed(() =>
+    this.classes().find((item) => Number(cellValue(item, 'id') || cellValue(item, 'Id')) === this.selectedClassId()) ?? null,
+  );
+
+  readonly classStudents = computed(() => {
+    const classId = this.selectedClassId();
+    if (!classId) {
+      return [];
+    }
+
+    return this.students().filter((student) => Number(cellValue(student, 'classId') || cellValue(student, 'ClassId')) === classId);
+  });
+
+  constructor() {
+    effect(() => {
+      this.refreshKey();
+      this.loadData();
+    });
+  }
+
+  selectClass(item: Record<string, unknown>): void {
+    this.selectedClassId.set(Number(cellValue(item, 'id') || cellValue(item, 'Id')));
+  }
+
+  isSelectedClass(item: Record<string, unknown>): boolean {
+    return Number(cellValue(item, 'id') || cellValue(item, 'Id')) === this.selectedClassId();
+  }
+
+  exportExcel(): void {
+    const rows = this.classStudents().map((student) => ({
+      'Mã sinh viên': cellValue(student, 'personCode') || cellValue(student, 'PersonCode'),
+      'Họ và tên': cellValue(student, 'fullName') || cellValue(student, 'FullName'),
+      Email: cellValue(student, 'email') || cellValue(student, 'Email'),
+      Lớp: cellValue(student, 'classCode') || cellValue(student, 'ClassCode'),
+    }));
+
+    exportRowsToExcel('danh-sach-lop.xlsx', rows, ['Mã sinh viên', 'Họ và tên', 'Email', 'Lớp']);
+  }
+
+  private loadData(): void {
+    this.classesService.getClasses().subscribe({ next: (rows) => this.classes.set(rows) });
+    this.studentsService.getStudents().subscribe({ next: (rows) => this.students.set(rows) });
+  }
+}
+
+function normalize(value: unknown): string {
+  return String(value ?? '').trim().toLowerCase();
+}

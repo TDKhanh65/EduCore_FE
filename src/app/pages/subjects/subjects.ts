@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { finalize } from 'rxjs';
 
 import { SubjectsService } from '@services/subjects.service';
@@ -24,13 +24,13 @@ export class SubjectsPage {
   readonly columns = ['subjectCode', 'subjectName', 'credits', 'totalLessons', 'isActive'];
   readonly formOpen = signal(false);
   readonly editingRow = signal<Record<string, unknown> | null>(null);
-  readonly formFields: EntityFormField[] = [
-    { key: 'subjectCode', label: 'Mã môn', type: 'text', required: true },
+  readonly formFields = computed<EntityFormField[]>(() => [
+    { key: 'subjectCode', label: 'Mã môn', type: 'text', required: true, readonly: !!this.editingRow() },
     { key: 'subjectName', label: 'Tên môn', type: 'text', required: true },
     { key: 'credits', label: 'Tín chỉ', type: 'number', required: true },
     { key: 'totalLessons', label: 'Số tiết', type: 'number', required: true },
     { key: 'isActive', label: 'Trạng thái', type: 'boolean' },
-  ];
+  ]);
 
   constructor() {
     effect(() => {
@@ -69,7 +69,11 @@ export class SubjectsPage {
   saveSubject(values: Record<string, unknown>): void {
     const editing = this.editingRow();
     const id = editing ? cellValue(editing, 'id') || cellValue(editing, 'Id') : null;
-    const payload = { ...values, [editing ? 'updatedBy' : 'createdBy']: currentActor() };
+    const originalCode = editing
+      ? cellValue(editing, 'subjectCode') || cellValue(editing, 'SubjectCode')
+      : values['subjectCode'];
+    const { id: _id, Id: _pascalId, ...editableValues } = values;
+    const payload = { ...editableValues, subjectCode: originalCode, [editing ? 'updatedBy' : 'createdBy']: currentActor() };
     const request = editing && id
       ? this.subjectsService.updateSubject(id as string | number, payload)
       : this.subjectsService.createSubject(payload);

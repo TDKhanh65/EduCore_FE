@@ -5,8 +5,16 @@ import { FormsModule } from '@angular/forms';
 export interface EntityFormField {
   key: string;
   label: string;
-  type: 'text' | 'number' | 'boolean';
+  type: 'text' | 'number' | 'boolean' | 'select';
   required?: boolean;
+  min?: number;
+  readonly?: boolean;
+  options?: EntityFormOption[];
+}
+
+export interface EntityFormOption {
+  label: string;
+  value: string | number | boolean;
 }
 
 @Component({
@@ -26,8 +34,8 @@ export class EntityForm implements OnChanges {
   readonly values = signal<Record<string, unknown>>({});
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['initialValues']) {
-      this.values.set({ ...this.initialValues() });
+    if (changes['initialValues'] || changes['fields']) {
+      this.values.set(this.normalizeValues());
     }
   }
 
@@ -37,5 +45,26 @@ export class EntityForm implements OnChanges {
 
   submit(): void {
     this.save.emit(this.values());
+  }
+
+  private normalizeValues(): Record<string, unknown> {
+    const source = this.initialValues();
+    const normalized: Record<string, unknown> = { ...source };
+
+    for (const field of this.fields()) {
+      if (field.key in normalized) {
+        continue;
+      }
+
+      const matchedKey = Object.keys(source).find(
+        (key) => key.toLowerCase() === field.key.toLowerCase(),
+      );
+
+      if (matchedKey) {
+        normalized[field.key] = source[matchedKey];
+      }
+    }
+
+    return normalized;
   }
 }

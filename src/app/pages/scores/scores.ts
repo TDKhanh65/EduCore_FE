@@ -30,28 +30,58 @@ export class ScoresPage {
 
   readonly refreshKey = input(0);
   readonly rows = signal<Record<string, unknown>[]>([]);
+  readonly students = signal<Record<string, unknown>[]>([]);
+  readonly subjects = signal<Record<string, unknown>[]>([]);
+  readonly semesters = signal<Record<string, unknown>[]>([]);
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly message = signal('');
   readonly formOpen = signal(false);
   readonly editingRow = signal<Record<string, unknown> | null>(null);
   readonly edit = output<Record<string, unknown>>();
-  readonly exportColumns = ['StudentName', 'SubjectName', 'SemesterId', 'AttendanceScore', 'MidtermScore', 'FinalScore', 'AverageScore', 'GradeLetter'];
-  readonly formFields: EntityFormField[] = [
-    { key: 'personProfileId', label: 'Hồ sơ SV ID', type: 'number', required: true },
-    { key: 'subjectId', label: 'Môn học ID', type: 'number', required: true },
-    { key: 'semesterId', label: 'Học kỳ ID', type: 'number', required: true },
-    { key: 'attendanceScore', label: 'Điểm chuyên cần', type: 'number', required: true },
-    { key: 'midtermScore', label: 'Điểm giữa kỳ', type: 'number', required: true },
-    { key: 'finalScore', label: 'Điểm cuối kỳ', type: 'number', required: true },
-  ];
+  readonly exportColumns = ['StudentCode', 'StudentName', 'SubjectName', 'SemesterCode', 'AttendanceScore', 'MidtermScore', 'FinalScore', 'AverageScore', 'GradeLetter'];
+  readonly formFields = computed<EntityFormField[]>(() => [
+    {
+      key: 'personProfileId',
+      label: 'Sinh viên',
+      type: 'select',
+      required: true,
+      options: this.students().map((item) => ({
+        value: Number(cellValue(item, 'id') || cellValue(item, 'Id')),
+        label: `${cellValue(item, 'personCode') || cellValue(item, 'PersonCode')} - ${cellValue(item, 'fullName') || cellValue(item, 'FullName')}`,
+      })),
+    },
+    {
+      key: 'subjectId',
+      label: 'Môn học',
+      type: 'select',
+      required: true,
+      options: this.subjects().map((item) => ({
+        value: Number(cellValue(item, 'id') || cellValue(item, 'Id')),
+        label: `${cellValue(item, 'subjectCode') || cellValue(item, 'SubjectCode')} - ${cellValue(item, 'subjectName') || cellValue(item, 'SubjectName')}`,
+      })),
+    },
+    {
+      key: 'semesterId',
+      label: 'Học kỳ',
+      type: 'select',
+      required: true,
+      options: this.semesters().map((item) => ({
+        value: Number(cellValue(item, 'id') || cellValue(item, 'Id')),
+        label: `${cellValue(item, 'semesterCode') || cellValue(item, 'SemesterCode')} - ${cellValue(item, 'schoolYear') || cellValue(item, 'SchoolYear')}`,
+      })),
+    },
+    { key: 'attendanceScore', label: 'Điểm chuyên cần', type: 'number', min: 0, required: true },
+    { key: 'midtermScore', label: 'Điểm giữa kỳ', type: 'number', min: 0, required: true },
+    { key: 'finalScore', label: 'Điểm cuối kỳ', type: 'number', min: 0, required: true },
+  ]);
 
   readonly scoreRows = computed<ScoreRow[]>(() =>
     this.rows().map((row) => ({
       id: valueOf(row, 'Id') ?? valueOf(row, 'id'),
-      studentName: displayValue(valueOf(row, 'StudentName') ?? valueOf(row, 'studentName')),
+      studentName: displayStudent(row),
       subjectName: displayValue(valueOf(row, 'SubjectName') ?? valueOf(row, 'subjectName')),
-      semesterId: displayValue(valueOf(row, 'SemesterId') ?? valueOf(row, 'semesterId')),
+      semesterId: displayValue(valueOf(row, 'SemesterCode') ?? valueOf(row, 'semesterCode') ?? valueOf(row, 'SemesterId') ?? valueOf(row, 'semesterId')),
       attendanceScore: displayScore(valueOf(row, 'AttendanceScore') ?? valueOf(row, 'attendanceScore')),
       midtermScore: displayScore(valueOf(row, 'MidtermScore') ?? valueOf(row, 'midtermScore')),
       finalScore: displayScore(valueOf(row, 'FinalScore') ?? valueOf(row, 'finalScore')),
@@ -65,6 +95,7 @@ export class ScoresPage {
     effect(() => {
       this.refreshKey();
       this.loadScores();
+      this.loadLookups();
     });
   }
 
@@ -77,8 +108,14 @@ export class ScoresPage {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (rows) => this.rows.set(rows),
-        error: () => this.message.set('Không tải được danh sách điểm số. Vui lòng thử lại sau.'),
+        error: () => this.message.set('Không tải được danh sách điểm.'),
       });
+  }
+
+  private loadLookups(): void {
+    this.scoresService.getStudents().subscribe({ next: (rows) => this.students.set(rows) });
+    this.scoresService.getSubjects().subscribe({ next: (rows) => this.subjects.set(rows) });
+    this.scoresService.getSemesters().subscribe({ next: (rows) => this.semesters.set(rows) });
   }
 
   openCreate(): void {
@@ -111,25 +148,25 @@ export class ScoresPage {
         this.formOpen.set(false);
         this.loadScores();
       },
-      error: () => this.message.set('Không lưu được điểm số. Vui lòng kiểm tra dữ liệu và thử lại.'),
+      error: () => this.message.set('Không lưu được điểm. Hãy kiểm tra dữ liệu.'),
     });
   }
 
   deleteScore(row: Record<string, unknown>): void {
     const id = cellValue(row, 'id') || cellValue(row, 'Id');
-    if (!id || !confirm('Bạn chắc chắn muốn xóa điểm số này?')) {
+    if (!id || !confirm('Bạn chắc chắn muốn xóa điểm này?')) {
       return;
     }
 
     this.loading.set(true);
     this.scoresService.deleteScore(id as string | number).pipe(finalize(() => this.loading.set(false))).subscribe({
       next: () => this.loadScores(),
-      error: () => this.message.set('Không xóa được điểm số. Vui lòng thử lại sau.'),
+      error: () => this.message.set('Không xóa được điểm.'),
     });
   }
 
   exportCsv(): void {
-    exportRowsToCsv('diem-so.csv', this.rows(), this.exportColumns);
+    exportRowsToCsv('diem-so.xlsx', this.rows(), this.exportColumns);
   }
 }
 
@@ -148,6 +185,21 @@ function displayValue(value: unknown): string {
   }
 
   return String(value);
+}
+
+function displayStudent(row: Record<string, unknown>): string {
+  const code = displayValue(valueOf(row, 'StudentCode') ?? valueOf(row, 'studentCode'));
+  const name = displayValue(valueOf(row, 'StudentName') ?? valueOf(row, 'studentName'));
+
+  if (code === '-') {
+    return name;
+  }
+
+  if (name === '-') {
+    return code;
+  }
+
+  return `${code} - ${name}`;
 }
 
 function displayScore(value: unknown): string {
