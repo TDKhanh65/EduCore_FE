@@ -65,7 +65,7 @@
 }
 
 .scores-alert {
-  margin-bottom: 1rem;
+  margin: 1rem 1.3rem 0;
   padding: 0.85rem 1rem;
   color: #991b1b;
   border: 1px solid #fecaca;
@@ -74,8 +74,42 @@
   font-weight: 700;
 }
 
+.scores-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  padding: 1rem 1.3rem 0;
+}
+
+.scores-filters label {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.scores-filters span {
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.scores-filters input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0 0.95rem;
+  color: #0f172a;
+  border: 1px solid #bed4ee;
+  border-radius: 0.65rem;
+  background: #ffffff;
+  outline: none;
+}
+
+.scores-filters input:focus {
+  border-color: #1677e8;
+  box-shadow: 0 0 0 3px rgba(22, 119, 232, 0.14);
+}
+
 .scores-table {
-  min-width: 980px;
+  min-width: 1160px;
   --bs-table-bg: #ffffff;
   --bs-table-color: #1e293b;
   --bs-table-border-color: #dce8f5;
@@ -111,6 +145,11 @@
 .student-name {
   color: #0f172a;
   font-weight: 800;
+}
+
+.student-code {
+  color: #0f5fc8;
+  font-weight: 850;
 }
 
 .average-score,
@@ -180,6 +219,11 @@
   .scores-table-wrap {
     margin: 0 -0.35rem;
     border-radius: 0.7rem;
+  }
+
+  .scores-filters {
+    grid-template-columns: 1fr;
+    padding: 0.8rem 0.9rem 0;
   }
 
   .scores-panel-header {

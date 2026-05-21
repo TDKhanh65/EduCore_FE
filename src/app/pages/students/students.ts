@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { StudentsService } from '@services/students.service';
@@ -9,7 +10,7 @@ import { cellValue, exportRowsToCsv } from '@shared/helpers';
 
 @Component({
   selector: 'app-students-page',
-  imports: [CommonModule, DataTable, EntityForm],
+  imports: [CommonModule, FormsModule, DataTable, EntityForm],
   templateUrl: './students.html',
   styleUrl: './students.css',
 })
@@ -19,12 +20,26 @@ export class StudentsPage {
   readonly refreshKey = input(0);
   readonly rows = signal<Record<string, unknown>[]>([]);
   readonly classes = signal<Record<string, unknown>[]>([]);
+  readonly searchQuery = signal('');
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly message = signal('');
   readonly columns = ['personCode', 'fullName', 'email', 'classCode', 'isActive'];
   readonly formOpen = signal(false);
   readonly editingRow = signal<Record<string, unknown> | null>(null);
+  readonly filteredRows = computed(() => {
+    const keyword = normalize(this.searchQuery());
+    if (!keyword) {
+      return this.rows();
+    }
+
+    return this.rows().filter((row) => {
+      const code = normalize(cellValue(row, 'personCode') || cellValue(row, 'PersonCode'));
+      const name = normalize(cellValue(row, 'fullName') || cellValue(row, 'FullName'));
+      return code.includes(keyword) || name.includes(keyword);
+    });
+  });
+
   readonly formFields = computed<EntityFormField[]>(() => [
     ...(this.editingRow()
       ? [{ key: 'personCode', label: 'Mã sinh viên', type: 'text', readonly: true } satisfies EntityFormField]
@@ -102,6 +117,7 @@ export class StudentsPage {
       next: () => {
         this.formOpen.set(false);
         this.loadStudents();
+        this.loadClasses();
       },
       error: () => this.message.set('Không lưu được sinh viên. Hãy kiểm tra dữ liệu.'),
     });
@@ -124,10 +140,14 @@ export class StudentsPage {
   }
 
   exportCsv(): void {
-    exportRowsToCsv('sinh-vien.csv', this.rows(), this.columns);
+    exportRowsToCsv('sinh-vien.xlsx', this.filteredRows(), this.columns);
   }
 }
 
 function currentActor(): string {
   return 'FE_ADMIN';
+}
+
+function normalize(value: unknown): string {
+  return String(value ?? '').trim().toLowerCase();
 }

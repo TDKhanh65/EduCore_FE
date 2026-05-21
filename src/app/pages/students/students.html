@@ -1,7 +1,7 @@
 <section class="students-panel">
   <div class="students-panel-header">
     <div>
-      <div class="eyebrow">{{ rows().length }} bản ghi</div>
+      <div class="eyebrow">{{ filteredRows().length }} / {{ rows().length }} bản ghi</div>
       <h2>Sinh viên</h2>
       <p>Quản lý hồ sơ sinh viên, thông tin lớp và trạng thái tài khoản.</p>
     </div>
@@ -23,8 +23,25 @@
     <span class="status-pill">{{ loading() ? 'Đang tải' : 'Sẵn sàng' }}</span>
   </div>
 
+  <div class="students-filter">
+    <label for="student-search">Tìm kiếm MSSV hoặc họ tên</label>
+    <input
+      id="student-search"
+      type="search"
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQuery.set($event)"
+      placeholder="Nhập mã sinh viên hoặc tên sinh viên"
+    />
+  </div>
+
   <div class="students-table">
-    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" (edit)="openEdit($event)" (remove)="deleteStudent($event)" />
+    <app-data-table
+      [columns]="columns"
+      [rows]="filteredRows()"
+      [loading]="loading()"
+      (edit)="openEdit($event)"
+      (remove)="deleteStudent($event)"
+    />
   </div>
 
   @if (formOpen()) {

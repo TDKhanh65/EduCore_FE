@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { ScoresService } from '@services/scores.service';
@@ -8,7 +9,9 @@ import { cellValue, exportRowsToCsv } from '@shared/helpers';
 
 interface ScoreRow {
   id: unknown;
+  studentCode: string;
   studentName: string;
+  classCode: string;
   subjectName: string;
   semesterId: string;
   attendanceScore: string;
@@ -21,7 +24,7 @@ interface ScoreRow {
 
 @Component({
   selector: 'app-scores-page',
-  imports: [CommonModule, EntityForm],
+  imports: [CommonModule, FormsModule, EntityForm],
   templateUrl: './scores.html',
   styleUrl: './scores.css',
 })
@@ -33,13 +36,15 @@ export class ScoresPage {
   readonly students = signal<Record<string, unknown>[]>([]);
   readonly subjects = signal<Record<string, unknown>[]>([]);
   readonly semesters = signal<Record<string, unknown>[]>([]);
+  readonly studentQuery = signal('');
+  readonly classQuery = signal('');
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly message = signal('');
   readonly formOpen = signal(false);
   readonly editingRow = signal<Record<string, unknown> | null>(null);
   readonly edit = output<Record<string, unknown>>();
-  readonly exportColumns = ['StudentCode', 'StudentName', 'SubjectName', 'SemesterCode', 'AttendanceScore', 'MidtermScore', 'FinalScore', 'AverageScore', 'GradeLetter'];
+  readonly exportColumns = ['StudentCode', 'StudentName', 'ClassCode', 'SubjectName', 'SemesterCode', 'AttendanceScore', 'MidtermScore', 'FinalScore', 'AverageScore', 'GradeLetter'];
   readonly formFields = computed<EntityFormField[]>(() => [
     {
       key: 'personProfileId',
@@ -79,7 +84,9 @@ export class ScoresPage {
   readonly scoreRows = computed<ScoreRow[]>(() =>
     this.rows().map((row) => ({
       id: valueOf(row, 'Id') ?? valueOf(row, 'id'),
-      studentName: displayStudent(row),
+      studentCode: displayValue(valueOf(row, 'StudentCode') ?? valueOf(row, 'studentCode')),
+      studentName: displayValue(valueOf(row, 'StudentName') ?? valueOf(row, 'studentName')),
+      classCode: displayValue(valueOf(row, 'ClassCode') ?? valueOf(row, 'classCode')),
       subjectName: displayValue(valueOf(row, 'SubjectName') ?? valueOf(row, 'subjectName')),
       semesterId: displayValue(valueOf(row, 'SemesterCode') ?? valueOf(row, 'semesterCode') ?? valueOf(row, 'SemesterId') ?? valueOf(row, 'semesterId')),
       attendanceScore: displayScore(valueOf(row, 'AttendanceScore') ?? valueOf(row, 'attendanceScore')),
@@ -90,6 +97,19 @@ export class ScoresPage {
       source: row,
     })),
   );
+
+  readonly filteredScoreRows = computed(() => {
+    const studentKeyword = normalize(this.studentQuery());
+    const classKeyword = normalize(this.classQuery());
+
+    return this.scoreRows().filter((row) => {
+      const studentText = normalize(`${row.studentCode} ${row.studentName}`);
+      const classText = normalize(row.classCode);
+      const matchesStudent = !studentKeyword || studentText.includes(studentKeyword);
+      const matchesClass = !classKeyword || classText.includes(classKeyword);
+      return matchesStudent && matchesClass;
+    });
+  });
 
   constructor() {
     effect(() => {
@@ -166,7 +186,7 @@ export class ScoresPage {
   }
 
   exportCsv(): void {
-    exportRowsToCsv('diem-so.xlsx', this.rows(), this.exportColumns);
+    exportRowsToCsv('diem-so.xlsx', this.filteredScoreRows().map((row) => row.source), this.exportColumns);
   }
 }
 
@@ -187,21 +207,6 @@ function displayValue(value: unknown): string {
   return String(value);
 }
 
-function displayStudent(row: Record<string, unknown>): string {
-  const code = displayValue(valueOf(row, 'StudentCode') ?? valueOf(row, 'studentCode'));
-  const name = displayValue(valueOf(row, 'StudentName') ?? valueOf(row, 'studentName'));
-
-  if (code === '-') {
-    return name;
-  }
-
-  if (name === '-') {
-    return code;
-  }
-
-  return `${code} - ${name}`;
-}
-
 function displayScore(value: unknown): string {
   if (typeof value === 'number') {
     return Number.isInteger(value) ? String(value) : value.toFixed(2);
@@ -220,4 +225,8 @@ function toScoreFormValues(row: Record<string, unknown>): Record<string, unknown
     midtermScore: valueOf(row, 'MidtermScore') ?? valueOf(row, 'midtermScore'),
     finalScore: valueOf(row, 'FinalScore') ?? valueOf(row, 'finalScore'),
   };
+}
+
+function normalize(value: unknown): string {
+  return String(value ?? '').trim().toLowerCase();
 }

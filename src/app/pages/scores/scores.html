@@ -1,7 +1,7 @@
 <section class="scores-panel">
   <div class="scores-panel-header">
     <div>
-      <div class="eyebrow">{{ rows().length }} bản ghi</div>
+      <div class="eyebrow">{{ filteredScoreRows().length }} / {{ rows().length }} bản ghi</div>
       <h2>Điểm số</h2>
     </div>
     <div class="header-buttons">
@@ -14,11 +14,34 @@
     <div class="scores-alert">{{ message() }}</div>
   }
 
+  <div class="scores-filters">
+    <label>
+      <span>Tìm MSSV hoặc họ tên</span>
+      <input
+        type="search"
+        [ngModel]="studentQuery()"
+        (ngModelChange)="studentQuery.set($event)"
+        placeholder="Nhập mã sinh viên hoặc tên"
+      />
+    </label>
+    <label>
+      <span>Tìm lớp</span>
+      <input
+        type="search"
+        [ngModel]="classQuery()"
+        (ngModelChange)="classQuery.set($event)"
+        placeholder="Ví dụ: D22CNTT03"
+      />
+    </label>
+  </div>
+
   <div class="scores-table-wrap">
     <table class="table align-middle mb-0 scores-table">
       <thead>
         <tr>
-          <th>Sinh viên</th>
+          <th>MSSV</th>
+          <th>Họ và tên</th>
+          <th>Lớp</th>
           <th>Môn học</th>
           <th>Học kỳ</th>
           <th>Chuyên cần</th>
@@ -32,12 +55,14 @@
       <tbody>
         @if (loading()) {
           <tr>
-            <td colspan="9" class="scores-state">Đang tải dữ liệu...</td>
+            <td colspan="11" class="scores-state">Đang tải dữ liệu...</td>
           </tr>
-        } @else if (scoreRows().length) {
-          @for (row of scoreRows(); track row.id ?? $index) {
+        } @else if (filteredScoreRows().length) {
+          @for (row of filteredScoreRows(); track row.id ?? $index) {
             <tr>
+              <td><strong class="student-code">{{ row.studentCode }}</strong></td>
               <td><strong class="student-name">{{ row.studentName }}</strong></td>
+              <td>{{ row.classCode }}</td>
               <td>{{ row.subjectName }}</td>
               <td>{{ row.semesterId }}</td>
               <td>{{ row.attendanceScore }}</td>
@@ -55,7 +80,7 @@
           }
         } @else {
           <tr>
-            <td colspan="9" class="scores-state">Chưa có dữ liệu điểm số để hiển thị.</td>
+            <td colspan="11" class="scores-state">Chưa có dữ liệu điểm số phù hợp để hiển thị.</td>
           </tr>
         }
       </tbody>

@@ -103,7 +103,7 @@ export class SubjectsPage {
   }
 
   exportCsv(): void {
-    exportRowsToCsv('mon-hoc.csv', this.rows(), this.columns);
+    exportRowsToCsv('mon-hoc.xlsx', this.rows(), this.columns);
   }
 }
 

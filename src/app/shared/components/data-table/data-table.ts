@@ -37,6 +37,7 @@ export class DataTable {
       credits: 'Tín chỉ',
       email: 'Email',
       facultyId: 'Khoa',
+      facultyName: 'Khoa',
       finalScore: 'Điểm cuối kỳ',
       fullName: 'Họ và tên',
       homeroomTeacher: 'GVCN',

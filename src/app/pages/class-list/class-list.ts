@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 
 import { ClassesService } from '@services/classes.service';
 import { StudentsService } from '@services/students.service';
@@ -79,8 +80,20 @@ export class ClassListPage {
   }
 
   private loadData(): void {
-    this.classesService.getClasses().subscribe({ next: (rows) => this.classes.set(rows) });
-    this.studentsService.getStudents().subscribe({ next: (rows) => this.students.set(rows) });
+    forkJoin({
+      classes: this.classesService.getClasses(),
+      students: this.studentsService.getStudents(),
+    }).subscribe({
+      next: ({ classes, students }) => {
+        this.classes.set(classes);
+        this.students.set(students);
+
+        const selectedId = this.selectedClassId();
+        if (selectedId && !classes.some((item) => Number(cellValue(item, 'id') || cellValue(item, 'Id')) === selectedId)) {
+          this.selectedClassId.set(null);
+        }
+      },
+    });
   }
 }
 

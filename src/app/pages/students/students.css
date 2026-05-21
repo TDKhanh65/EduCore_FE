@@ -69,6 +69,34 @@
   padding: 1rem 1.3rem 0;
 }
 
+.students-filter {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem 1.3rem 0;
+}
+
+.students-filter label {
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.students-filter input {
+  width: min(32rem, 100%);
+  min-height: 2.75rem;
+  padding: 0 0.95rem;
+  color: #0f172a;
+  border: 1px solid #bed4ee;
+  border-radius: 0.65rem;
+  background: #ffffff;
+  outline: none;
+}
+
+.students-filter input:focus {
+  border-color: #1677e8;
+  box-shadow: 0 0 0 3px rgba(22, 119, 232, 0.14);
+}
+
 .students-alert {
   margin: 1rem 1.3rem 0;
   padding: 0.85rem 1rem;
@@ -110,6 +138,10 @@
   .students-toolbar {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .students-filter {
+    padding: 0.8rem 0.9rem 0;
   }
 
   .header-buttons {

@@ -102,6 +102,7 @@ export class ClassesPage {
       next: () => {
         this.formOpen.set(false);
         this.loadClasses();
+        this.loadFaculties();
       },
       error: () => this.message.set('Không lưu được lớp học. Hãy kiểm tra dữ liệu.'),
     });
@@ -121,7 +122,7 @@ export class ClassesPage {
   }
 
   exportCsv(): void {
-    exportRowsToCsv('lop-hoc.csv', this.rows(), this.columns);
+    exportRowsToCsv('lop-hoc.xlsx', this.rows(), this.columns);
   }
 
   private facultyOptions(): EntityFormOption[] {
