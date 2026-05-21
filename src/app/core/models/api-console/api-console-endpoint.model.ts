@@ -19,9 +19,9 @@ export const API_CONSOLE_ENDPOINTS: ApiEndpoint[] = [
     ],
   },
   { id: 'dashboard-summary', group: 'Dashboard', name: 'Tổng quan hệ thống', description: 'Đọc các chỉ số tổng hợp.', method: 'GET', path: API_ENDPOINT.DASHBOARD.SUMMARY, tone: 'neutral', fields: [] },
-  { id: 'logs-actions', group: 'Logs', name: 'Nhật ký thao tác', description: 'Danh sách hành động trong hệ thống.', method: 'GET', path: API_ENDPOINT.LOGS.ACTIONS, tone: 'neutral', fields: [] },
-  { id: 'logs-logins', group: 'Logs', name: 'Nhật ký đăng nhập', description: 'Lịch sử login của người dùng.', method: 'GET', path: API_ENDPOINT.LOGS.LOGINS, tone: 'neutral', fields: [] },
-  { id: 'roles-list', group: 'Roles', name: 'Danh sách vai trò', description: 'Lấy tất cả vai trò.', method: 'GET', path: API_ENDPOINT.ROLES.ROOT, tone: 'neutral', fields: [] },
+  { id: 'logs-actions', group: 'Logs', name: 'Nhật ký thao tác', description: 'Danh sách hành động trong hệ thống.', method: 'POST', path: API_ENDPOINT.LOGS.ACTIONS, tone: 'neutral', fields: [] },
+  { id: 'logs-logins', group: 'Logs', name: 'Nhật ký đăng nhập', description: 'Lịch sử login của người dùng.', method: 'POST', path: API_ENDPOINT.LOGS.LOGINS, tone: 'neutral', fields: [] },
+  { id: 'roles-list', group: 'Roles', name: 'Danh sách vai trò', description: 'Lấy tất cả vai trò.', method: 'POST', path: API_ENDPOINT.ROLES.SEARCH, tone: 'neutral', fields: [] },
   { id: 'roles-permissions', group: 'Roles', name: 'Tất cả phân quyền', description: 'Lấy ma trận quyền.', method: 'GET', path: API_ENDPOINT.ROLES.PERMISSIONS, tone: 'neutral', fields: [] },
   { id: 'roles-permissions-by-role', group: 'Roles', name: 'Quyền theo vai trò', description: 'Lọc quyền theo roleId.', method: 'GET', path: '/api/roles/{roleId}/permissions', tone: 'neutral', fields: [{ key: 'roleId', label: 'Role ID', type: 'number', location: 'path', required: true }] },
   {
@@ -55,7 +55,7 @@ export const API_CONSOLE_ENDPOINTS: ApiEndpoint[] = [
       { key: 'updatedBy', label: 'Người cập nhật', type: 'text', location: 'body' },
     ],
   },
-  ...crudEndpoints('Classes', API_ENDPOINT.CLASSES.ROOT, 'Lớp học', [
+  ...crudEndpoints('Classes', API_ENDPOINT.CLASSES.ROOT, API_ENDPOINT.CLASSES.SEARCH, 'Lớp học', [
     ['classCode', 'Mã lớp', 'text'],
     ['className', 'Tên lớp', 'text'],
     ['facultyId', 'Khoa ID', 'number'],
@@ -63,21 +63,21 @@ export const API_CONSOLE_ENDPOINTS: ApiEndpoint[] = [
     ['homeroomTeacher', 'GVCN', 'text'],
     ['createdBy', 'Người tạo', 'text'],
   ]),
-  ...crudEndpoints('Students', API_ENDPOINT.STUDENTS.ROOT, 'Sinh viên', [
+  ...crudEndpoints('Students', API_ENDPOINT.STUDENTS.ROOT, API_ENDPOINT.STUDENTS.SEARCH, 'Sinh viên', [
     ['personCode', 'Mã sinh viên', 'text'],
     ['fullName', 'Họ tên', 'text'],
     ['email', 'Email', 'text'],
     ['classId', 'Lớp ID', 'number'],
     ['createdBy', 'Người tạo', 'text'],
   ]),
-  ...crudEndpoints('Subjects', API_ENDPOINT.SUBJECTS.ROOT, 'Môn học', [
+  ...crudEndpoints('Subjects', API_ENDPOINT.SUBJECTS.ROOT, API_ENDPOINT.SUBJECTS.SEARCH, 'Môn học', [
     ['subjectCode', 'Mã môn', 'text'],
     ['subjectName', 'Tên môn', 'text'],
     ['credits', 'Tín chỉ', 'number'],
     ['totalLessons', 'Số tiết', 'number'],
     ['createdBy', 'Người tạo', 'text'],
   ]),
-  ...crudEndpoints('Scores', API_ENDPOINT.SCORES.ROOT, 'Điểm', [
+  ...crudEndpoints('Scores', API_ENDPOINT.SCORES.ROOT, API_ENDPOINT.SCORES.SEARCH, 'Điểm', [
     ['personProfileId', 'Hồ sơ SV ID', 'number'],
     ['subjectId', 'Môn học ID', 'number'],
     ['semesterId', 'Học kỳ ID', 'number'],
@@ -128,7 +128,7 @@ export const API_CONSOLE_ENDPOINTS: ApiEndpoint[] = [
   { id: 'weather', group: 'WeatherForecast', name: 'WeatherForecast', description: 'Endpoint mẫu của backend.', method: 'GET', path: API_ENDPOINT.WEATHER_FORECAST, tone: 'neutral', fields: [] },
 ];
 
-function crudEndpoints(group: string, basePath: string, noun: string, fields: CrudField[], softDelete = true): ApiEndpoint[] {
+function crudEndpoints(group: string, basePath: string, searchPath: string, noun: string, fields: CrudField[], softDelete = true): ApiEndpoint[] {
   const bodyFields = fields.map(([key, label, type]) => ({ key, label, type, location: 'body' as const }));
   const updateFields = [
     ...bodyFields,
@@ -137,7 +137,7 @@ function crudEndpoints(group: string, basePath: string, noun: string, fields: Cr
   ];
 
   return [
-    { id: `${group}-list`, group, name: `Danh sách ${noun}`, description: `Lấy toàn bộ ${noun.toLowerCase()}.`, method: 'GET', path: basePath, tone: 'neutral', fields: [] },
+    { id: `${group}-list`, group, name: `Danh sách ${noun}`, description: `Lấy toàn bộ ${noun.toLowerCase()}.`, method: 'POST', path: searchPath, tone: 'neutral', fields: [] },
     { id: `${group}-detail`, group, name: `Chi tiết ${noun}`, description: `Tìm ${noun.toLowerCase()} theo ID.`, method: 'GET', path: `${basePath}/{id}`, tone: 'neutral', fields: [{ key: 'id', label: 'ID', type: 'number', location: 'path', required: true }] },
     { id: `${group}-create`, group, name: `Tạo ${noun}`, description: `Thêm mới ${noun.toLowerCase()}.`, method: 'POST', path: basePath, tone: 'create', fields: bodyFields },
     { id: `${group}-update`, group, name: `Cập nhật ${noun}`, description: `Sửa thông tin ${noun.toLowerCase()}.`, method: 'PUT', path: `${basePath}/{id}`, tone: 'update', fields: [{ key: 'id', label: 'ID', type: 'number', location: 'path', required: true }, ...updateFields] },

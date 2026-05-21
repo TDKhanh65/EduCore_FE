@@ -3,6 +3,7 @@ import { Component, computed, effect, inject, input, signal } from '@angular/cor
 import { finalize } from 'rxjs';
 
 import { ClassesService } from '@services/classes.service';
+import { PermissionService } from '@services/permission.service';
 import { DataTable } from '@shared/components/data-table/data-table';
 import { EntityForm, EntityFormField, EntityFormOption } from '@shared/components/entity-form/entity-form';
 import { cellValue, exportRowsToCsv } from '@shared/helpers';
@@ -15,6 +16,7 @@ import { cellValue, exportRowsToCsv } from '@shared/helpers';
 })
 export class ClassesPage {
   private readonly classesService = inject(ClassesService);
+  private readonly permissionService = inject(PermissionService);
 
   readonly refreshKey = input(0);
   readonly rows = signal<Record<string, unknown>[]>([]);
@@ -23,6 +25,9 @@ export class ClassesPage {
   readonly saving = signal(false);
   readonly message = signal('');
   readonly columns = ['classCode', 'className', 'facultyName', 'schoolYear', 'homeroomTeacher'];
+  readonly canCreate = computed(() => this.permissionService.has('CLASS_CREATE'));
+  readonly canEdit = computed(() => this.permissionService.has('CLASS_UPDATE'));
+  readonly canDelete = computed(() => this.permissionService.has('CLASS_DELETE'));
   readonly formOpen = signal(false);
   readonly editingRow = signal<Record<string, unknown> | null>(null);
   readonly formFields = computed<EntityFormField[]>(() => [

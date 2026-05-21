@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { API_ENDPOINT } from '@constants/api-endpoint.constants';
+import { createSearchRequest } from '@core/helpers/search-request.helper';
 import { toTableRows, unwrapApiData } from '@shared/helpers';
 
 import { APIService } from './common/api.service';
@@ -14,9 +15,9 @@ export class StudentsService {
   private readonly apiService = inject(APIService);
   private readonly classesService = inject(ClassesService);
 
-  getStudents(): Observable<Record<string, unknown>[]> {
+  getStudents(searchParams: Record<string, unknown> | null = null): Observable<Record<string, unknown>[]> {
     return this.apiService
-      .request<unknown>('GET', API_ENDPOINT.STUDENTS.ROOT)
+      .request<unknown>('POST', API_ENDPOINT.STUDENTS.SEARCH, { body: createSearchRequest(searchParams) })
       .pipe(map((response) => toTableRows(unwrapApiData(response.body))));
   }
 

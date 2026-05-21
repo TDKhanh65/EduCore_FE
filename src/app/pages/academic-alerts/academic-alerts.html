@@ -1,0 +1,76 @@
+<section class="alerts-panel">
+  <div class="alerts-header">
+    <div>
+      <div class="eyebrow">{{ filteredAlertCourses().length }} cảnh báo</div>
+      <h2>Cảnh báo học tập</h2>
+      <p>Gom các môn có nguy cơ rớt hoặc cần theo dõi theo từng sinh viên.</p>
+    </div>
+    <button type="button" class="export-button" [disabled]="!filteredAlertCourses().length" (click)="exportExcel()">Xuất Excel</button>
+  </div>
+
+  @if (message()) {
+    <div class="alerts-message">{{ message() }}</div>
+  }
+
+  <div class="alert-summary">
+    <div>
+      <strong>{{ dangerCount() }}</strong>
+      <span>Nguy cơ rớt môn</span>
+    </div>
+    <div>
+      <strong>{{ warningCount() }}</strong>
+      <span>Cần theo dõi</span>
+    </div>
+    <div>
+      <strong>{{ studentGroups().length }}</strong>
+      <span>Sinh viên có cảnh báo</span>
+    </div>
+  </div>
+
+  <div class="alerts-filter">
+    <label>
+      <span>Tìm sinh viên, lớp hoặc môn học</span>
+      <input type="search" [ngModel]="query()" (ngModelChange)="query.set($event)" placeholder="Nhập MSSV, họ tên, lớp hoặc môn học" />
+    </label>
+    <label class="danger-filter">
+      <input type="checkbox" [ngModel]="dangerOnly()" (ngModelChange)="dangerOnly.set($event)" />
+      <span>Chỉ nguy cơ rớt môn</span>
+    </label>
+    <button type="button" class="refresh-button" (click)="resetFilters()">Làm mới lọc</button>
+  </div>
+
+  @if (loading()) {
+    <div class="empty-state">Đang tải dữ liệu cảnh báo...</div>
+  } @else if (studentGroups().length) {
+    <div class="alert-groups">
+      @for (group of studentGroups(); track group.studentId || group.studentCode) {
+        <article class="student-alert-card">
+          <div class="student-alert-head">
+            <div>
+              <strong>{{ group.studentCode }} - {{ group.studentName }}</strong>
+              <span>{{ group.classCode }}</span>
+            </div>
+            <div class="alert-counts">
+              <span class="danger">{{ group.dangerCount }} rớt môn</span>
+              <span class="warning">{{ group.warningCount }} theo dõi</span>
+            </div>
+          </div>
+
+          <div class="course-list">
+            @for (course of group.courses; track course.id || course.subjectName) {
+              <div class="course-row">
+                <div>
+                  <strong>{{ course.subjectName }}</strong>
+                  <span>TB {{ course.averageScore }} · {{ course.gradeLetter }}</span>
+                </div>
+                <span class="reason-badge" [class.danger]="course.tone === 'danger'" [class.warning]="course.tone === 'warning'">{{ course.reason }}</span>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">Không có cảnh báo học tập phù hợp.</div>
+  }
+</section>

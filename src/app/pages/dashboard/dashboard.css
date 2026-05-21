@@ -147,6 +147,7 @@
   border-radius: 0.7rem;
   background: #ffffff;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .action-button.primary,

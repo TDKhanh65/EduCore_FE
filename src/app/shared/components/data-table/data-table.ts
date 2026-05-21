@@ -12,9 +12,23 @@ export class DataTable {
   readonly rows = input<Record<string, unknown>[]>([]);
   readonly loading = input(false);
   readonly showActions = input(true);
+  readonly canEdit = input(true);
+  readonly canDelete = input(true);
   readonly emptyText = input('Chưa có dữ liệu để hiển thị.');
   readonly edit = output<Record<string, unknown>>();
   readonly remove = output<Record<string, unknown>>();
+
+  safeColumns(): string[] {
+    return Array.isArray(this.columns()) ? this.columns() : [];
+  }
+
+  safeRows(): Record<string, unknown>[] {
+    return Array.isArray(this.rows()) ? this.rows() : [];
+  }
+
+  hasRowActions(): boolean {
+    return this.showActions() && (this.canEdit() || this.canDelete());
+  }
 
   columnLabel(column: string): string {
     const labels: Record<string, string> = {

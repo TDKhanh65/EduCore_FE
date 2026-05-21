@@ -61,14 +61,6 @@
   background: #eef6ff;
 }
 
-.students-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.3rem 0;
-}
-
 .students-filter {
   display: grid;
   gap: 0.45rem;
@@ -97,6 +89,32 @@
   box-shadow: 0 0 0 3px rgba(22, 119, 232, 0.14);
 }
 
+.search-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.search-button,
+.refresh-button {
+  min-height: 2.55rem;
+  padding: 0 1rem;
+  border-radius: 0.65rem;
+  font-weight: 750;
+}
+
+.search-button {
+  color: #ffffff;
+  border: 1px solid #1677e8;
+  background: #1677e8;
+}
+
+.refresh-button {
+  color: #1267c8;
+  border: 1px solid #b8d5f8;
+  background: #eef6ff;
+}
+
 .students-alert {
   margin: 1rem 1.3rem 0;
   padding: 0.85rem 1rem;
@@ -107,35 +125,12 @@
   font-weight: 700;
 }
 
-.students-toolbar strong,
-.students-toolbar span {
-  display: block;
-}
-
-.students-toolbar strong {
-  color: #0f172a;
-}
-
-.students-toolbar span {
-  color: #64748b;
-  font-size: 0.9rem;
-}
-
-.status-pill {
-  padding: 0.35rem 0.75rem;
-  color: #0f8a63 !important;
-  border-radius: 999px;
-  background: #e8f8f2;
-  font-weight: 750;
-}
-
 .students-table {
   padding: 1rem;
 }
 
 @media (max-width: 700px) {
-  .students-panel-header,
-  .students-toolbar {
+  .students-panel-header {
     align-items: stretch;
     flex-direction: column;
   }

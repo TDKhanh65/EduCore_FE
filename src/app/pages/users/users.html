@@ -3,11 +3,13 @@
     <div>
       <div class="eyebrow">{{ rows().length }} bản ghi</div>
       <h2>Vai trò</h2>
-      <p>Danh sách vai trò và trạng thái trong hệ thống.</p>
+      <p>Danh sách vai trò, trạng thái và phân quyền trong hệ thống.</p>
     </div>
     <div class="header-buttons">
       <button type="button" class="export-button" (click)="exportCsv()">Xuất file</button>
-      <button type="button" class="add-button" (click)="openCreate()">Thêm mới</button>
+      @if (canCreate()) {
+        <button type="button" class="add-button" (click)="openCreate()">Thêm mới</button>
+      }
     </div>
   </div>
 
@@ -16,8 +18,106 @@
   }
 
   <div class="entity-table">
-    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" (edit)="openEdit($event)" (remove)="deleteUserRole($event)" />
+    <div class="roles-table-wrap">
+      <table class="roles-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên quyền</th>
+            <th>Mã quyền</th>
+            <th>Trạng thái</th>
+            <th class="text-end">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+            <tr>
+              <td colspan="5" class="table-state">Đang tải dữ liệu...</td>
+            </tr>
+          } @else if (rows().length) {
+            @for (row of rows(); track roleId(row) || $index) {
+              <tr [class.selected]="selectedRole() === row">
+                <td>{{ roleId(row) }}</td>
+                <td>{{ roleName(row) }}</td>
+                <td>{{ roleCode(row) }}</td>
+                <td>
+                  <span class="status-badge" [class.paused]="displayStatus(row) === 'Tạm dừng'">
+                    {{ displayStatus(row) }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <div class="row-actions">
+                    <button type="button" class="permission-button" (click)="openPermissions(row)">Phân quyền</button>
+                    @if (canEdit()) {
+                      <button type="button" class="edit-button" (click)="openEdit(row)">Sửa</button>
+                    }
+                    @if (canDelete()) {
+                      <button type="button" class="delete-button" (click)="deleteUserRole(row)">Xóa</button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          } @else {
+            <tr>
+              <td colspan="5" class="table-state">Chưa có dữ liệu để hiển thị.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
+
+  @if (selectedRole()) {
+    <section class="permission-panel">
+      <div class="permission-header">
+        <div>
+          <div class="eyebrow">Phân quyền</div>
+          <h3>{{ roleName(selectedRole()) }} <span>{{ roleCode(selectedRole()) }}</span></h3>
+        </div>
+        <button type="button" class="refresh-button" (click)="openPermissions(selectedRole()!)">Làm mới quyền</button>
+      </div>
+
+      @if (permissionMessage()) {
+        <div class="entity-alert">{{ permissionMessage() }}</div>
+      }
+
+      @if (permissionsLoading()) {
+        <div class="table-state">Đang tải ma trận phân quyền...</div>
+      } @else if (permissionModules().length) {
+        <div class="permission-grid">
+          @for (module of permissionModules(); track module.moduleId) {
+            <article class="permission-module">
+              <div class="module-header">
+                <div>
+                  <strong>{{ module.moduleName }}</strong>
+                  <span>{{ module.moduleCode }}</span>
+                </div>
+                <label class="switch-row">
+                  <input type="checkbox" [checked]="isModuleAllowed(module)" (change)="updateModulePermission(module, $event)" />
+                  <span>Bật cả module</span>
+                </label>
+              </div>
+
+              <div class="permission-list">
+                @for (permission of module.permissions; track permissionCode(permission)) {
+                  <label class="permission-item">
+                    <input type="checkbox" [checked]="isAllowed(permission)" (change)="updatePermission(permission, $event)" />
+                    <span>
+                      <strong>{{ permissionName(permission) }}</strong>
+                      <small>{{ permissionCode(permission) }}</small>
+                    </span>
+                  </label>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="table-state">Vai trò này chưa có dữ liệu phân quyền.</div>
+      }
+    </section>
+  }
 
   @if (formOpen()) {
     <app-entity-form

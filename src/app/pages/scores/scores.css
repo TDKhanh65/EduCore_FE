@@ -76,8 +76,9 @@
 
 .scores-filters {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
   gap: 0.85rem;
+  align-items: end;
   padding: 1rem 1.3rem 0;
 }
 
@@ -106,6 +107,58 @@
 .scores-filters input:focus {
   border-color: #1677e8;
   box-shadow: 0 0 0 3px rgba(22, 119, 232, 0.14);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.risk-filter {
+  grid-column: 1 / -1;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.55rem !important;
+  width: fit-content;
+  min-height: 2.4rem;
+  padding: 0.35rem 0.75rem;
+  color: #b42318;
+  border: 1px solid #f5b5af;
+  border-radius: 999px;
+  background: #fff1f0;
+  font-weight: 800;
+}
+
+.risk-filter input {
+  width: 1rem;
+  min-height: 1rem;
+  accent-color: #dc2626;
+}
+
+.risk-filter span {
+  color: inherit;
+  font-size: 0.9rem;
+}
+
+.search-button,
+.refresh-button {
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border-radius: 0.65rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.search-button {
+  color: #ffffff;
+  border: 1px solid #1677e8;
+  background: #1677e8;
+}
+
+.refresh-button {
+  color: #1267c8;
+  border: 1px solid #b8d5f8;
+  background: #eef6ff;
 }
 
 .scores-table {
@@ -153,7 +206,8 @@
 }
 
 .average-score,
-.grade-badge {
+.grade-badge,
+.warning-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -170,6 +224,21 @@
 }
 
 .grade-badge {
+  color: #0f766e;
+  background: #dff8f4;
+}
+
+.warning-badge.tone-danger {
+  color: #b42318;
+  background: #fff1f0;
+}
+
+.warning-badge.tone-warning {
+  color: #b45309;
+  background: #fff3d6;
+}
+
+.warning-badge.tone-ok {
   color: #0f766e;
   background: #dff8f4;
 }
@@ -224,6 +293,10 @@
   .scores-filters {
     grid-template-columns: 1fr;
     padding: 0.8rem 0.9rem 0;
+  }
+
+  .filter-actions {
+    flex-direction: column;
   }
 
   .scores-panel-header {

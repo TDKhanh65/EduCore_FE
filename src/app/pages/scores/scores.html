@@ -6,7 +6,9 @@
     </div>
     <div class="header-buttons">
       <button type="button" class="export-button" (click)="exportCsv()">Xuất Excel</button>
-      <button type="button" class="add-button" (click)="openCreate()">Thêm mới</button>
+      @if (canCreate()) {
+        <button type="button" class="add-button" (click)="openCreate()">Thêm mới</button>
+      }
     </div>
   </div>
 
@@ -21,6 +23,7 @@
         type="search"
         [ngModel]="studentQuery()"
         (ngModelChange)="studentQuery.set($event)"
+        (keyup.enter)="searchScores()"
         placeholder="Nhập mã sinh viên hoặc tên"
       />
     </label>
@@ -30,8 +33,17 @@
         type="search"
         [ngModel]="classQuery()"
         (ngModelChange)="classQuery.set($event)"
+        (keyup.enter)="searchScores()"
         placeholder="Ví dụ: D22CNTT03"
       />
+    </label>
+    <div class="filter-actions">
+      <button type="button" class="search-button" (click)="searchScores()">Tìm kiếm</button>
+      <button type="button" class="refresh-button" (click)="resetSearch()">Làm mới</button>
+    </div>
+    <label class="risk-filter">
+      <input type="checkbox" [ngModel]="riskOnly()" (ngModelChange)="toggleRiskOnly($event)" />
+      <span>Chỉ xem nguy cơ rớt môn</span>
     </label>
   </div>
 
@@ -49,13 +61,14 @@
           <th>Cuối kỳ</th>
           <th>Trung bình</th>
           <th>Xếp loại</th>
+          <th>Cảnh báo học tập</th>
           <th class="text-end">Thao tác</th>
         </tr>
       </thead>
       <tbody>
         @if (loading()) {
           <tr>
-            <td colspan="11" class="scores-state">Đang tải dữ liệu...</td>
+            <td colspan="12" class="scores-state">Đang tải dữ liệu...</td>
           </tr>
         } @else if (filteredScoreRows().length) {
           @for (row of filteredScoreRows(); track row.id ?? $index) {
@@ -70,17 +83,22 @@
               <td>{{ row.finalScore }}</td>
               <td><span class="average-score">{{ row.averageScore }}</span></td>
               <td><span class="grade-badge">{{ row.gradeLetter }}</span></td>
+              <td><span class="warning-badge" [class]="'warning-badge tone-' + row.warningTone">{{ row.academicWarning }}</span></td>
               <td class="text-end">
                 <div class="row-actions">
-                  <button type="button" class="btn btn-sm edit-button" (click)="openEdit(row.source)">Sửa</button>
-                  <button type="button" class="btn btn-sm delete-button" (click)="deleteScore(row.source)">Xóa</button>
+                  @if (canEdit()) {
+                    <button type="button" class="btn btn-sm edit-button" (click)="openEdit(row.source)">Sửa</button>
+                  }
+                  @if (canDelete()) {
+                    <button type="button" class="btn btn-sm delete-button" (click)="deleteScore(row.source)">Xóa</button>
+                  }
                 </div>
               </td>
             </tr>
           }
         } @else {
           <tr>
-            <td colspan="11" class="scores-state">Chưa có dữ liệu điểm số phù hợp để hiển thị.</td>
+            <td colspan="12" class="scores-state">Chưa có dữ liệu điểm số phù hợp để hiển thị.</td>
           </tr>
         }
       </tbody>
