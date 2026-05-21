@@ -15,8 +15,13 @@
         type="search"
         [ngModel]="classQuery()"
         (ngModelChange)="classQuery.set($event)"
+        (keyup.enter)="searchClasses()"
         placeholder="Nhập mã lớp hoặc tên lớp"
       />
+      <div class="class-search-actions">
+        <button type="button" class="search-button" (click)="searchClasses()">Tìm kiếm</button>
+        <button type="button" class="refresh-button" (click)="resetSearch()">Làm mới</button>
+      </div>
 
       <div class="class-results">
         @for (item of filteredClasses(); track cellValue(item, 'id') || cellValue(item, 'Id')) {

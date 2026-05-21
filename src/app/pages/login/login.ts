@@ -29,6 +29,7 @@ export class Login {
   login(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
+    this.authService.clearToken();
 
     this.authService
       .send(

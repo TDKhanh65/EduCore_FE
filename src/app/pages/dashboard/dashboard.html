@@ -8,7 +8,7 @@
     </div>
 
     <nav class="nav nav-pills flex-lg-column gap-2">
-      @for (item of menuItems; track item.id) {
+      @for (item of menuItems(); track item.id) {
         <button type="button" class="nav-link" [class.active]="activeMenuId() === item.id" (click)="selectMenu(item.id)">
           <span>{{ item.label }}</span>
         </button>
@@ -21,10 +21,10 @@
       <div class="academy-pill"><span></span> EduCore Academy</div>
       <div class="topbar-actions">
         <div class="user-chip">
-          <span>S</span>
+          <span>{{ userInitial() }}</span>
           <div>
-            <strong>Quản trị viên</strong>
-            <small>Admin</small>
+            <strong>{{ displayName() }}</strong>
+            <small>{{ displayRole() }}</small>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
     <header class="page-header">
       <div>
         @if (isDashboard()) {
-          <h1>Xin chào, Quản trị viên</h1>
+          <h1>Xin chào, {{ displayName() }}</h1>
           <p>Tổng quan tình hình hoạt động của hệ thống đào tạo hôm nay.</p>
         } @else {
           <div class="eyebrow">EduCore</div>
@@ -59,6 +59,8 @@
       <app-subjects-page [refreshKey]="refreshKey()" />
     } @else if (activeMenuId() === 'scores') {
       <app-scores-page [refreshKey]="refreshKey()" />
+    } @else if (activeMenuId() === 'academicAlerts') {
+      <app-academic-alerts-page [refreshKey]="refreshKey()" />
     } @else if (activeMenuId() === 'gradeEntry') {
       <app-grade-entry-page [refreshKey]="refreshKey()" />
     } @else if (activeMenuId() === 'roles') {

@@ -7,7 +7,9 @@
     </div>
     <div class="header-buttons">
       <button type="button" class="export-button" (click)="exportCsv()">Xuất file</button>
-      <button type="button" class="add-button" (click)="openCreate()">Thêm mới</button>
+      @if (canCreate()) {
+        <button type="button" class="add-button" (click)="openCreate()">Thêm mới</button>
+      }
     </div>
   </div>
 
@@ -16,7 +18,7 @@
   }
 
   <div class="entity-table">
-    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" (edit)="openEdit($event)" (remove)="deleteSubject($event)" />
+    <app-data-table [columns]="columns" [rows]="rows()" [loading]="loading()" [canEdit]="canEdit()" [canDelete]="canDelete()" (edit)="openEdit($event)" (remove)="deleteSubject($event)" />
   </div>
 
   @if (formOpen()) {

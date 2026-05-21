@@ -44,7 +44,13 @@ export function buildApiBody(endpoint: ApiEndpoint, values: ApiFormValues): Reco
     }
   }
 
-  return Object.keys(payload).length ? payload : null;
+  if (Object.keys(payload).length) {
+    return payload;
+  }
+
+  return endpoint.method === 'POST' && endpoint.path.endsWith('/search')
+    ? { page: 1, pageSize: 1000, searchParams: null }
+    : null;
 }
 
 export function createApiResult(endpoint: ApiEndpoint, status: number, statusText: string, duration: number, body: unknown): ApiResult {

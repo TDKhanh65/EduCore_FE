@@ -47,11 +47,19 @@ export class EntityForm implements OnChanges {
     this.save.emit(this.values());
   }
 
+  safeFields(): EntityFormField[] {
+    return Array.isArray(this.fields()) ? this.fields() : [];
+  }
+
+  safeOptions(field: EntityFormField): EntityFormOption[] {
+    return Array.isArray(field.options) ? field.options : [];
+  }
+
   private normalizeValues(): Record<string, unknown> {
     const source = this.initialValues();
     const normalized: Record<string, unknown> = { ...source };
 
-    for (const field of this.fields()) {
+    for (const field of this.safeFields()) {
       if (field.key in normalized) {
         continue;
       }

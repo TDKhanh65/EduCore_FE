@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { StudentsService } from '@services/students.service';
+import { PermissionService } from '@services/permission.service';
 import { DataTable } from '@shared/components/data-table/data-table';
 import { EntityForm, EntityFormField } from '@shared/components/entity-form/entity-form';
 import { cellValue, exportRowsToCsv } from '@shared/helpers';
@@ -16,6 +17,7 @@ import { cellValue, exportRowsToCsv } from '@shared/helpers';
 })
 export class StudentsPage {
   private readonly studentsService = inject(StudentsService);
+  private readonly permissionService = inject(PermissionService);
 
   readonly refreshKey = input(0);
   readonly rows = signal<Record<string, unknown>[]>([]);
@@ -25,20 +27,12 @@ export class StudentsPage {
   readonly saving = signal(false);
   readonly message = signal('');
   readonly columns = ['personCode', 'fullName', 'email', 'classCode', 'isActive'];
+  readonly canCreate = computed(() => this.permissionService.has('STUDENT_CREATE'));
+  readonly canEdit = computed(() => this.permissionService.has('STUDENT_UPDATE'));
+  readonly canDelete = computed(() => this.permissionService.has('STUDENT_DELETE'));
   readonly formOpen = signal(false);
   readonly editingRow = signal<Record<string, unknown> | null>(null);
-  readonly filteredRows = computed(() => {
-    const keyword = normalize(this.searchQuery());
-    if (!keyword) {
-      return this.rows();
-    }
-
-    return this.rows().filter((row) => {
-      const code = normalize(cellValue(row, 'personCode') || cellValue(row, 'PersonCode'));
-      const name = normalize(cellValue(row, 'fullName') || cellValue(row, 'FullName'));
-      return code.includes(keyword) || name.includes(keyword);
-    });
-  });
+  readonly filteredRows = computed(() => this.rows());
 
   readonly formFields = computed<EntityFormField[]>(() => [
     ...(this.editingRow()
@@ -64,17 +58,29 @@ export class StudentsPage {
   constructor() {
     effect(() => {
       this.refreshKey();
+      this.searchQuery.set('');
       this.loadStudents();
       this.loadClasses();
     });
   }
 
-  private loadStudents(): void {
+  searchStudents(): void {
+    this.loadStudents(this.searchQuery());
+  }
+
+  resetSearch(reload = true): void {
+    this.searchQuery.set('');
+    if (reload) {
+      this.loadStudents();
+    }
+  }
+
+  private loadStudents(keyword = ''): void {
     this.loading.set(true);
     this.message.set('');
 
     this.studentsService
-      .getStudents()
+      .getStudents({ keyword: keyword.trim() })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (rows) => this.rows.set(rows),
@@ -146,8 +152,4 @@ export class StudentsPage {
 
 function currentActor(): string {
   return 'FE_ADMIN';
-}
-
-function normalize(value: unknown): string {
-  return String(value ?? '').trim().toLowerCase();
 }

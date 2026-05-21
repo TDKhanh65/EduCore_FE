@@ -6,7 +6,7 @@
     </div>
 
     <div class="entity-form-grid">
-      @for (field of fields(); track field.key) {
+      @for (field of safeFields(); track field.key) {
         <label class="field-row">
           <span>{{ field.label }}</span>
           @if (field.type === 'boolean') {
@@ -28,7 +28,7 @@
               (ngModelChange)="setValue(field.key, $event === '' ? null : +$event)"
             >
               <option value="">-- Chọn --</option>
-              @for (option of field.options ?? []; track option.value) {
+              @for (option of safeOptions(field); track option.value) {
                 <option [value]="option.value">{{ option.label }}</option>
               }
             </select>

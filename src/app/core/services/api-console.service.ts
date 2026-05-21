@@ -24,7 +24,12 @@ export class ApiConsoleService {
     }
 
     const user = localStorage.getItem(APP_STORAGE.AUTH_USER);
-    return user ? JSON.parse(user) as Record<string, unknown> : null;
+    try {
+      return user ? JSON.parse(user) as Record<string, unknown> : null;
+    } catch {
+      this.clearToken();
+      return null;
+    }
   }
 
   saveToken(token: string): void {

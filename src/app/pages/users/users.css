@@ -6,11 +6,16 @@
   box-shadow: 0 0.75rem 1.75rem rgba(15, 23, 42, 0.06);
 }
 
-.entity-panel-header {
+.entity-panel-header,
+.permission-header,
+.module-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.entity-panel-header {
   padding: 1.15rem 1.3rem;
   border-bottom: 1px solid #d8e3f0;
 }
@@ -23,11 +28,19 @@
   text-transform: uppercase;
 }
 
-.entity-panel-header h2 {
+.entity-panel-header h2,
+.permission-header h3 {
   margin: 0.2rem 0 0.25rem;
   color: #0f172a;
   font-size: 1.25rem;
   font-weight: 850;
+}
+
+.permission-header h3 span {
+  margin-left: 0.45rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 750;
 }
 
 .entity-panel-header p {
@@ -35,30 +48,46 @@
   color: #64748b;
 }
 
-.header-buttons {
+.header-buttons,
+.row-actions {
   display: flex;
   gap: 0.7rem;
+  justify-content: flex-end;
 }
 
 .add-button,
-.export-button {
-  min-height: 2.55rem;
-  padding: 0 1rem;
-  border-radius: 0.7rem;
+.export-button,
+.edit-button,
+.delete-button,
+.permission-button,
+.refresh-button {
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  border-radius: 0.55rem;
   font-weight: 750;
   white-space: nowrap;
+  cursor: pointer;
 }
 
-.add-button {
+.add-button,
+.permission-button {
   color: #ffffff;
   border: 1px solid #1677e8;
   background: #1677e8;
 }
 
-.export-button {
+.export-button,
+.edit-button,
+.refresh-button {
   color: #1267c8;
   border: 1px solid #b8d5f8;
   background: #eef6ff;
+}
+
+.delete-button {
+  color: #b42318;
+  border: 1px solid #f5b5af;
+  background: #fff1f0;
 }
 
 .entity-alert {
@@ -71,26 +100,172 @@
   font-weight: 700;
 }
 
-.entity-table {
+.entity-table,
+.permission-panel {
   padding: 1rem;
 }
 
+.roles-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #d7e4f2;
+  border-radius: 0.85rem;
+}
+
+.roles-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+}
+
+.roles-table th,
+.roles-table td {
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid #dce8f5;
+  color: #0f172a;
+}
+
+.roles-table th {
+  color: #2f5f9e;
+  background: #edf5ff;
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.roles-table tr.selected td {
+  background: #f3f8ff;
+}
+
+.text-end {
+  text-align: right;
+}
+
+.table-state {
+  padding: 2rem 1rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.7rem;
+  color: #0f766e;
+  border-radius: 999px;
+  background: #dff8f4;
+  font-weight: 800;
+}
+
+.status-badge.paused {
+  color: #b45309;
+  background: #fff3d6;
+}
+
+.permission-panel {
+  border-top: 1px solid #d8e3f0;
+  background: #fbfdff;
+}
+
+.permission-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.permission-module {
+  border: 1px solid #d8e3f0;
+  border-radius: 0.85rem;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.module-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e4edf7;
+  background: #f5f9ff;
+}
+
+.module-header strong,
+.module-header span {
+  display: block;
+}
+
+.module-header span {
+  margin-top: 0.2rem;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.switch-row,
+.permission-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #1e293b;
+  font-weight: 750;
+}
+
+.permission-list {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem;
+}
+
+.permission-item {
+  justify-content: flex-start;
+  padding: 0.65rem 0.7rem;
+  border-radius: 0.6rem;
+}
+
+.permission-item:hover {
+  background: #f5f9ff;
+}
+
+.permission-item span {
+  display: grid;
+}
+
+.permission-item small {
+  color: #64748b;
+}
+
+input[type='checkbox'] {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: #1677e8;
+}
+
+@media (max-width: 900px) {
+  .permission-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 700px) {
-  .entity-panel-header {
+  .entity-panel-header,
+  .permission-header {
     align-items: stretch;
     flex-direction: column;
   }
 
-  .header-buttons {
+  .header-buttons,
+  .row-actions {
     flex-direction: column;
   }
 
   .add-button,
-  .export-button {
+  .export-button,
+  .edit-button,
+  .delete-button,
+  .permission-button,
+  .refresh-button {
     width: 100%;
   }
 
-  .entity-table {
+  .entity-table,
+  .permission-panel {
     padding: 0.7rem;
   }
 }

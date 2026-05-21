@@ -24,21 +24,7 @@ export class ClassListPage {
   readonly classQuery = signal('');
   readonly selectedClassId = signal<number | null>(null);
 
-  readonly filteredClasses = computed(() => {
-    const keyword = normalize(this.classQuery());
-    const rows = this.classes();
-    if (!keyword) {
-      return rows.slice(0, 20);
-    }
-
-    return rows
-      .filter((item) => {
-        const code = normalize(cellValue(item, 'classCode') || cellValue(item, 'ClassCode'));
-        const name = normalize(cellValue(item, 'className') || cellValue(item, 'ClassName'));
-        return code.includes(keyword) || name.includes(keyword);
-      })
-      .slice(0, 30);
-  });
+  readonly filteredClasses = computed(() => this.classes().slice(0, 30));
 
   readonly selectedClass = computed(() =>
     this.classes().find((item) => Number(cellValue(item, 'id') || cellValue(item, 'Id')) === this.selectedClassId()) ?? null,
@@ -56,6 +42,8 @@ export class ClassListPage {
   constructor() {
     effect(() => {
       this.refreshKey();
+      this.classQuery.set('');
+      this.selectedClassId.set(null);
       this.loadData();
     });
   }
@@ -79,9 +67,21 @@ export class ClassListPage {
     exportRowsToExcel('danh-sach-lop.xlsx', rows, ['Mã sinh viên', 'Họ và tên', 'Email', 'Lớp']);
   }
 
-  private loadData(): void {
+  searchClasses(): void {
+    this.loadData(this.classQuery());
+  }
+
+  resetSearch(reload = true): void {
+    this.classQuery.set('');
+    this.selectedClassId.set(null);
+    if (reload) {
+      this.loadData();
+    }
+  }
+
+  private loadData(keyword = ''): void {
     forkJoin({
-      classes: this.classesService.getClasses(),
+      classes: this.classesService.getClasses({ keyword: keyword.trim() }),
       students: this.studentsService.getStudents(),
     }).subscribe({
       next: ({ classes, students }) => {
@@ -95,8 +95,4 @@ export class ClassListPage {
       },
     });
   }
-}
-
-function normalize(value: unknown): string {
-  return String(value ?? '').trim().toLowerCase();
 }

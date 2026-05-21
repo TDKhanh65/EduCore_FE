@@ -7,21 +7,15 @@
     </div>
     <div class="header-buttons">
       <button type="button" class="export-button" (click)="exportCsv()">Xuất file</button>
-      <button type="button" class="add-button" (click)="openCreate()">Thêm sinh viên</button>
+      @if (canCreate()) {
+        <button type="button" class="add-button" (click)="openCreate()">Thêm sinh viên</button>
+      }
     </div>
   </div>
 
   @if (message()) {
     <div class="students-alert">{{ message() }}</div>
   }
-
-  <div class="students-toolbar">
-    <div>
-      <strong>Danh sách sinh viên</strong>
-      <span>Dữ liệu sinh viên từ EduCore API</span>
-    </div>
-    <span class="status-pill">{{ loading() ? 'Đang tải' : 'Sẵn sàng' }}</span>
-  </div>
 
   <div class="students-filter">
     <label for="student-search">Tìm kiếm MSSV hoặc họ tên</label>
@@ -30,8 +24,13 @@
       type="search"
       [ngModel]="searchQuery()"
       (ngModelChange)="searchQuery.set($event)"
+      (keyup.enter)="searchStudents()"
       placeholder="Nhập mã sinh viên hoặc tên sinh viên"
     />
+    <div class="search-actions">
+      <button type="button" class="search-button" (click)="searchStudents()">Tìm kiếm</button>
+      <button type="button" class="refresh-button" (click)="resetSearch()">Làm mới</button>
+    </div>
   </div>
 
   <div class="students-table">
@@ -39,6 +38,8 @@
       [columns]="columns"
       [rows]="filteredRows()"
       [loading]="loading()"
+      [canEdit]="canEdit()"
+      [canDelete]="canDelete()"
       (edit)="openEdit($event)"
       (remove)="deleteStudent($event)"
     />
